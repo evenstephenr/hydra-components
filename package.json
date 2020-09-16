@@ -9,8 +9,7 @@
   "module": "dist/index.modern.js",
   "source": "src/components/index.js",
   "files": [
-    "dist",
-    "lib"
+    "dist"
   ],
   "repository": {
     "type": "git",

@@ -2176,8 +2176,14 @@ var Button = function Button(props) {
   var children = props.children,
       rest = _objectWithoutPropertiesLoose(props, ["children"]);
 
+  console.log('hello from hydra/packages/components');
   return /*#__PURE__*/react.createElement("button", rest, children);
 };
 
+function sayHello() {
+  alert('hello');
+}
+
 exports.Button = Button;
+exports.sayHello = sayHello;
 //# sourceMappingURL=index.js.map
