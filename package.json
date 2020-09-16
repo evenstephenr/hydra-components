@@ -5,8 +5,11 @@
   "author": "evenstephenr <github@ramirs.com>",
   "homepage": "https://github.com/evenstephenr/hydra-components/",
   "license": "MIT",
-  "main": "lib/components.js",
+  "main": "dist/index.js",
+  "module": "dist/index.modern.js",
+  "source": "src/components/index.js",
   "files": [
+    "dist",
     "lib"
   ],
   "repository": {
@@ -16,12 +19,13 @@
   "scripts": {
     "test": "echo \"Error: run tests from root\" && exit 1",
     "start": "react-scripts start",
-    "build": "react-scripts build"
+    "build": "microbundle-crl --no-compress --format modern,cjs"
   },
   "bugs": {
     "url": "https://github.com/evenstephenr/hydra-components/issues"
   },
   "devDependencies": {
+    "microbundle-crl": "^0.13.11",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "^3.4.3",
