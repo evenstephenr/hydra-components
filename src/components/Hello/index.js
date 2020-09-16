@@ -1,3 +1,3 @@
-export function sayHello() {
-  alert('hello')
+export function sayHello(string) {
+  alert(string || 'hello')
 }

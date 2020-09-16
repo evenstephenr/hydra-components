@@ -2180,8 +2180,8 @@ var Button = function Button(props) {
   return /*#__PURE__*/react.createElement("button", rest, children);
 };
 
-function sayHello() {
-  alert('hello');
+function sayHello(string) {
+  alert(string || 'hello');
 }
 
 exports.Button = Button;
