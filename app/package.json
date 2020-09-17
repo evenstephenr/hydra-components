@@ -1,0 +1,29 @@
+{
+  "name": "sandbox-app-components",
+  "version": "0.0.1",
+  "private": true,
+  "description": "embedded react app used for developing components",
+  "author": "evenstephenr <github@ramirs.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node ../node_modules/react-scripts/bin/react-scripts.js start"
+  },
+  "devDependencies": {
+    "react": "file:../node_modules/react",
+    "react-dom": "file:../node_modules/react-dom",
+    "react-scripts": "file:../node_modules/react-scripts",
+    "components": "file:.."
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
