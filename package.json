@@ -7,7 +7,7 @@
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
-  "source": "src/components/index.js",
+  "source": "src/index.ts",
   "files": [
     "dist"
   ],
@@ -24,6 +24,7 @@
     "url": "https://github.com/evenstephenr/hydra-components/issues"
   },
   "devDependencies": {
+    "@types/react": "^16.9.49",
     "microbundle-crl": "^0.13.11",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

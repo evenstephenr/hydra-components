@@ -3,14 +3,14 @@ import React, {
 } from 'react';
 import {
   Button,
-  sayHello,
+  Alert,
 } from 'components';
 
 export const App = () => {
-  useEffect(() => sayHello('heyo'), []);
+  useEffect(() => Alert({ message: 'heyo' }), []);
   return (
   <>
     <div>TODO</div>
-    <Button onClick={() => alert('sup')}>sup</Button>
+    <Button onClick={() => Alert({ message: 'sup' })}>sup</Button>
   </>
 )}

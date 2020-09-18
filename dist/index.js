@@ -1,3 +1,8 @@
+function Alert(props) {
+  var message = props.message;
+  return alert(message);
+}
+
 function _objectWithoutPropertiesLoose(source, excluded) {
   if (source == null) return {};
   var target = {};
@@ -2177,13 +2182,9 @@ var Button = function Button(props) {
       rest = _objectWithoutPropertiesLoose(props, ["children"]);
 
   console.log('hello from hydra/packages/components');
-  return /*#__PURE__*/react.createElement("button", rest, children);
+  return react.createElement("button", Object.assign({}, rest), children);
 };
 
-function sayHello(string) {
-  alert(string || 'hello');
-}
-
+exports.Alert = Alert;
 exports.Button = Button;
-exports.sayHello = sayHello;
 //# sourceMappingURL=index.js.map
