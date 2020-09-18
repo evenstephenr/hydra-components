@@ -1,7 +1,7 @@
 {
   "name": "components",
   "version": "0.0.7",
-  "description": "> TODO: description",
+  "description": "Hydra component library - written for React, bootstrapped with create-react-library",
   "author": "evenstephenr <github@ramirs.com>",
   "homepage": "https://github.com/evenstephenr/hydra-components/",
   "license": "MIT",
@@ -18,7 +18,8 @@
   "scripts": {
     "test": "echo \"Error: run tests from root\" && exit 1",
     "start": "react-scripts start",
-    "build": "microbundle-crl --no-compress --format modern,cjs"
+    "build": "microbundle-crl --no-compress --format modern,cjs",
+    "link-app": "echo \"TODO\""
   },
   "bugs": {
     "url": "https://github.com/evenstephenr/hydra-components/issues"
