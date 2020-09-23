@@ -1,6 +1,6 @@
 # Hydra Component library
 
-`hydra-components` is a React component library, made with the help of [create-react-library](https://www.npmjs.com/package/create-react-library).
+`hydra-components` is a React component library, inspired by the architecture behind [create-react-library](https://www.npmjs.com/package/create-react-library).
 
 There are three very important modules in this project
 
@@ -8,7 +8,7 @@ There are three very important modules in this project
 2. `~/dist` - the built version of `~/src` that can be referenced in other projects (such as the nested `~/app` project, or the root `hydra` project)
 3. `~/app` - a sample React app that provides a sandbox environment to develop new components in
 
-This project is read-only, and is designed to be maintained as a sub-module in `hydra`
+> NOTE: This project is read-only, and is designed to be maintained as a sub-module in `hydra`
 
 ## What is Hydra?
 
@@ -16,22 +16,26 @@ This project is read-only, and is designed to be maintained as a sub-module in `
 
 ## Getting started
 
-I highly recommend following the getting started section of [Hydra](https://github.com/evenstephenr/hydra) to set up this project. However, if you're not interested in Lerna, you can fork this repo and set it up as a standalone project.
-
 Setting up hydra-components as a standalone project
 
 1. Fork the repo
 
-2. in the root, run `npm i` to install the project dependencies
+2. in the root, run `npm i` to install the component library dependencies
 
 3. in the root, run `npm run build` to initialize the `~/dist` directory
 
-4. in `~/app`, run `npm i` to link the nested react app to the root project dependencies, and install app-specific deps
+4. in `~/app`, run `npm i` to link the nested react app to the component library at the root, and install app-specific deps
 
 5. in `~/app`, run `npm run start` to verify the nested app builds correctly
 
-> NOTE: Every time you make updates to `~/src`, you will need to re-build `~/dist` using `npm run build` in `~/src` AND re-install the `~/dist` dependency using `npm i` inside `~/src/app` to pull the changes into `~/app`
+## Developer tooling
 
-## References
+You can use the script `npm run start` in both the root of the project and `~/app` simultaneously to start a dev environment
 
-* [create-react-library](https://www.npmjs.com/package/create-react-library)
+- When you use `npm run start` in the project root, `microbundle-crl` will re-build the component library as you make updates. If there are type or runtime errors, you will see them reported in the console.
+- When you use `npm run start` in the `~/app` directory, `react-scripts` will run the nested sample app as a normal React application
+
+## Resources
+
+- [create-react-library](https://www.npmjs.com/package/create-react-library)
+- [microbundle-crl](https://www.npmjs.com/package/microbundle-crl)
