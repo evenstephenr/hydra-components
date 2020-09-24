@@ -8,6 +8,24 @@ function Alert(props) {
   return alert(message);
 }
 
+function _extends() {
+  _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+
+  return _extends.apply(this, arguments);
+}
+
 function _objectWithoutPropertiesLoose(source, excluded) {
   if (source == null) return {};
   var target = {};
@@ -27,8 +45,30 @@ var Button = function Button(props) {
   var children = props.children,
       rest = _objectWithoutPropertiesLoose(props, ["children"]);
 
-  console.log('hello from hydra/packages/components');
+  console.log("hello from hydra/packages/components");
   return React__default.createElement("button", Object.assign({}, rest), children);
+};
+var Close = function Close(_ref) {
+  var close = _ref.close,
+      style = _ref.style;
+  return React__default.createElement("button", {
+    style: _extends({
+      fontSize: "32px",
+      width: "32px",
+      height: "32px",
+      lineHeight: "32px",
+      transform: "rotate(45deg)",
+      borderRadius: "32px",
+      background: "none",
+      border: "none",
+      outline: "none",
+      cursor: "pointer",
+      padding: "unset"
+    }, style),
+    onClick: function onClick() {
+      return close();
+    }
+  }, "+");
 };
 
 (function (BACKGROUND_TYPE) {
@@ -50,13 +90,13 @@ var NoBackground = function NoBackground(_ref) {
 var DarkBackground = function DarkBackground(_ref2) {
   var children = _ref2.children,
       _ref2$backgroundThres = _ref2.backgroundThreshold,
-      backgroundThreshold = _ref2$backgroundThres === void 0 ? 0.45 : _ref2$backgroundThres;
+      backgroundThreshold = _ref2$backgroundThres === void 0 ? 0.65 : _ref2$backgroundThres;
   return React__default.createElement("div", {
     id: "hydra-overlay-background-container-darken",
     style: {
       width: "100%",
       height: "100%",
-      backgroundColor: "rgba(140, 140, 140, " + backgroundThreshold + ")"
+      backgroundColor: "rgba(223, 228, 234, " + backgroundThreshold + ")"
     }
   }, children);
 };
@@ -102,8 +142,7 @@ var _createContext = React.createContext(null),
 var OverlayProvider = function OverlayProvider(_ref) {
   var children = _ref.children,
       backgroundType = _ref.backgroundType,
-      _ref$backgroundThresh = _ref.backgroundThreshold,
-      backgroundThreshold = _ref$backgroundThresh === void 0 ? 0.25 : _ref$backgroundThresh,
+      backgroundThreshold = _ref.backgroundThreshold,
       componentMap = _ref.componentMap;
 
   var _useState = React.useState({
@@ -162,21 +201,53 @@ var Overlay = {
   Provider: OverlayProvider
 };
 
+var COLOR = {
+  GRAY: {
+    100: "#ffffff",
+    200: "#f1f2f6",
+    300: "#dfe4ea",
+    400: "#ced6e0",
+    500: "#a4b0be",
+    600: "#747d8c",
+    700: "#57606f",
+    800: "#2f3542"
+  }
+};
+
 var ModalHeader = function ModalHeader(_ref) {
   var headerText = _ref.headerText,
-      closeModal = _ref.closeModal;
+      closeModal = _ref.closeModal,
+      style = _ref.style;
   return React__default.createElement("div", {
-    id: "hydra-modal-header"
-  }, React__default.createElement("p", null, headerText), React__default.createElement("button", {
-    onClick: function onClick() {
-      return closeModal();
+    id: "hydra-modal-header",
+    style: _extends({
+      minHeight: "32px",
+      position: "relative"
+    }, style)
+  }, headerText && React__default.createElement("h3", {
+    style: {
+      margin: "unset",
+      lineHeight: "32px"
     }
-  }, "X"));
+  }, headerText), React__default.createElement(Close, {
+    close: function close() {
+      return closeModal();
+    },
+    style: {
+      position: "absolute",
+      top: "0px",
+      right: "0px"
+    }
+  }));
 };
 var ModalBody = function ModalBody(_ref2) {
-  var children = _ref2.children;
+  var children = _ref2.children,
+      style = _ref2.style;
   return React__default.createElement("div", {
-    id: "hydra-modal-body"
+    id: "hydra-modal-body",
+    style: _extends({
+      flex: 1
+    }, style)
   }, children);
 };
 var ModalFooter = function ModalFooter(_ref3) {
@@ -191,6 +262,11 @@ var ModalContainer = function ModalContainer(_ref4) {
   var children = _ref4.children,
       deactivate = _ref4.deactivate,
       headerText = _ref4.headerText,
+      styleOverrides = _ref4.styleOverrides,
+      _ref4$width = _ref4.width,
+      width = _ref4$width === void 0 ? 600 : _ref4$width,
+      _ref4$height = _ref4.height,
+      height = _ref4$height === void 0 ? 550 : _ref4$height,
       _ref4$withHeader = _ref4.withHeader,
       withHeader = _ref4$withHeader === void 0 ? true : _ref4$withHeader,
       _ref4$Header = _ref4.Header,
@@ -202,11 +278,28 @@ var ModalContainer = function ModalContainer(_ref4) {
       _ref4$Footer = _ref4.Footer,
       Footer = _ref4$Footer === void 0 ? ModalFooter : _ref4$Footer;
   return React__default.createElement("div", {
-    id: "hydra-overlay-modal"
+    id: "hydra-overlay-modal",
+    style: _extends({
+      width: width + "px",
+      height: height + "px",
+      backgroundColor: "#fff",
+      borderRadius: "2px",
+      boxShadow: "0px 0px 8px 4px " + COLOR.GRAY[200],
+      position: "absolute",
+      left: "50%",
+      marginLeft: "-" + Math.floor(width / 2) + "px",
+      top: "16%",
+      display: "flex",
+      flexDirection: "column",
+      boxSizing: "border-box",
+      padding: "14px 16px 24px 16px"
+    }, styleOverrides === null || styleOverrides === void 0 ? void 0 : styleOverrides.container)
   }, withHeader && React__default.createElement(Header, {
     closeModal: deactivate,
     headerText: headerText
-  }), React__default.createElement(Body, null, children), withFooter && React__default.createElement(Footer, {
+  }), React__default.createElement(Body, {
+    style: styleOverrides === null || styleOverrides === void 0 ? void 0 : styleOverrides.body
+  }, children), withFooter && React__default.createElement(Footer, {
     closeModal: deactivate
   }));
 };
@@ -223,6 +316,7 @@ exports.Alert = Alert;
 exports.Background = Background;
 exports.BlurryBackground = BlurryBackground;
 exports.Button = Button;
+exports.Close = Close;
 exports.DarkBackground = DarkBackground;
 exports.Modal = Modal;
 exports.ModalBody = ModalBody;

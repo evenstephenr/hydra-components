@@ -12,9 +12,29 @@ const Button = props => {
     children,
     ...rest
   } = props;
-  console.log('hello from hydra/packages/components');
+  console.log("hello from hydra/packages/components");
   return React.createElement("button", Object.assign({}, rest), children);
 };
+const Close = ({
+  close,
+  style
+}) => React.createElement("button", {
+  style: {
+    fontSize: "32px",
+    width: "32px",
+    height: "32px",
+    lineHeight: "32px",
+    transform: "rotate(45deg)",
+    borderRadius: "32px",
+    background: "none",
+    border: "none",
+    outline: "none",
+    cursor: "pointer",
+    padding: "unset",
+    ...style
+  },
+  onClick: () => close()
+}, "+");
 
 var BACKGROUND_TYPE;
 
@@ -35,13 +55,13 @@ const NoBackground = ({
 }, children);
 const DarkBackground = ({
   children,
-  backgroundThreshold: _backgroundThreshold = 0.45
+  backgroundThreshold: _backgroundThreshold = 0.65
 }) => React.createElement("div", {
   id: "hydra-overlay-background-container-darken",
   style: {
     width: "100%",
     height: "100%",
-    backgroundColor: `rgba(140, 140, 140, ${_backgroundThreshold})`
+    backgroundColor: `rgba(223, 228, 234, ${_backgroundThreshold})`
   }
 }, children);
 const BlurryBackground = ({
@@ -87,7 +107,7 @@ const {
 const OverlayProvider = ({
   children,
   backgroundType,
-  backgroundThreshold: _backgroundThreshold = 0.25,
+  backgroundThreshold,
   componentMap
 }) => {
   const [overlayState, setOverlayState] = useState({
@@ -115,7 +135,7 @@ const OverlayProvider = ({
       isActive,
       componentMap,
       backgroundType,
-      backgroundThreshold: _backgroundThreshold,
+      backgroundThreshold,
       activate,
       deactivate
     }
@@ -133,7 +153,7 @@ const OverlayProvider = ({
     }
   }, isActive && React.createElement(Background, {
     backgroundType: backgroundType,
-    backgroundThreshold: _backgroundThreshold
+    backgroundThreshold: backgroundThreshold
   }, React.createElement(Component, null))));
 };
 
@@ -143,18 +163,52 @@ const Overlay = {
   Provider: OverlayProvider
 };
 
+const COLOR = {
+  GRAY: {
+    100: "#ffffff",
+    200: "#f1f2f6",
+    300: "#dfe4ea",
+    400: "#ced6e0",
+    500: "#a4b0be",
+    600: "#747d8c",
+    700: "#57606f",
+    800: "#2f3542"
+  }
+};
+
 const ModalHeader = ({
   headerText,
-  closeModal
+  closeModal,
+  style
 }) => React.createElement("div", {
-  id: "hydra-modal-header"
-}, React.createElement("p", null, headerText), React.createElement("button", {
-  onClick: () => closeModal()
-}, "X"));
+  id: "hydra-modal-header",
+  style: {
+    minHeight: "32px",
+    position: "relative",
+    ...style
+  }
+}, headerText && React.createElement("h3", {
+  style: {
+    margin: "unset",
+    lineHeight: "32px"
+  }
+}, headerText), React.createElement(Close, {
+  close: () => closeModal(),
+  style: {
+    position: "absolute",
+    top: "0px",
+    right: "0px"
+  }
+}));
 const ModalBody = ({
-  children
+  children,
+  style
 }) => React.createElement("div", {
-  id: "hydra-modal-body"
+  id: "hydra-modal-body",
+  style: {
+    flex: 1,
+    ...style
+  }
 }, children);
 const ModalFooter = ({
   closeModal
@@ -165,17 +219,38 @@ const ModalContainer = ({
   children,
   deactivate,
   headerText,
+  styleOverrides,
+  width: _width = 600,
+  height: _height = 550,
   withHeader: _withHeader = true,
   Header: _Header = ModalHeader,
   Body: _Body = ModalBody,
   withFooter: _withFooter = true,
   Footer: _Footer = ModalFooter
 }) => React.createElement("div", {
-  id: "hydra-overlay-modal"
+  id: "hydra-overlay-modal",
+  style: {
+    width: `${_width}px`,
+    height: `${_height}px`,
+    backgroundColor: "#fff",
+    borderRadius: "2px",
+    boxShadow: `0px 0px 8px 4px ${COLOR.GRAY[200]}`,
+    position: "absolute",
+    left: "50%",
+    marginLeft: `-${Math.floor(_width / 2)}px`,
+    top: "16%",
+    display: "flex",
+    flexDirection: "column",
+    boxSizing: "border-box",
+    padding: "14px 16px 24px 16px",
+    ...(styleOverrides === null || styleOverrides === void 0 ? void 0 : styleOverrides.container)
+  }
 }, _withHeader && React.createElement(_Header, {
   closeModal: deactivate,
   headerText: headerText
-}), React.createElement(_Body, null, children), _withFooter && React.createElement(_Footer, {
+}), React.createElement(_Body, {
+  style: styleOverrides === null || styleOverrides === void 0 ? void 0 : styleOverrides.body
+}, children), _withFooter && React.createElement(_Footer, {
   closeModal: deactivate
 }));
 const Modal = props => React.createElement(Overlay.Consumer, null, context => {
@@ -186,5 +261,5 @@ const Modal = props => React.createElement(Overlay.Consumer, null, context => {
   return React.createElement(Container, Object.assign({}, props, context));
 });
 
-export { Alert, BACKGROUND_TYPE, Background, BlurryBackground, Button, DarkBackground, Modal, ModalBody, ModalContainer, ModalFooter, ModalHeader, NoBackground, Overlay };
+export { Alert, BACKGROUND_TYPE, Background, BlurryBackground, Button, Close, DarkBackground, Modal, ModalBody, ModalContainer, ModalFooter, ModalHeader, NoBackground, Overlay };
 //# sourceMappingURL=index.modern.js.map

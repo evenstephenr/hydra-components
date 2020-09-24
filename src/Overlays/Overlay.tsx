@@ -45,7 +45,7 @@ type State = {
 const OverlayProvider: React.FC<OverlayProviderProps> = ({
   children,
   backgroundType,
-  backgroundThreshold = 0.25, // when backgroundType === BLUR, filter: blur(backgroundThreshold * 10 + 'px')
+  backgroundThreshold, // when backgroundType === BLUR, filter: blur(backgroundThreshold * 10 + 'px')
   componentMap,
 }) => {
   const [overlayState, setOverlayState] = useState<State>({

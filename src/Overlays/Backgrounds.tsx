@@ -25,14 +25,14 @@ export const NoBackground: FC = ({ children }) => (
 
 export const DarkBackground: FC<BackgroundProps> = ({
   children,
-  backgroundThreshold = 0.45,
+  backgroundThreshold = 0.65,
 }) => (
   <div
     id="hydra-overlay-background-container-darken"
     style={{
       width: "100%",
       height: "100%",
-      backgroundColor: `rgba(140, 140, 140, ${backgroundThreshold})`,
+      backgroundColor: `rgba(223, 228, 234, ${backgroundThreshold})`,
     }}
   >
     {children}

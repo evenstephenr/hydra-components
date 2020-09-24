@@ -49,7 +49,7 @@ const Default = () => (
 
 /** Using a stock Modal */
 const Message = () => (
-  <Modal>
+  <Modal headerText="This is a Modal">
     <div>hello hi hey</div>
   </Modal>
 );

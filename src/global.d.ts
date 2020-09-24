@@ -7,4 +7,5 @@ declare global {
   >;
   type Noop<R> = () => R;
   type CB<P, R> = (props: P) => R;
+  type StyleOverride = { style?: React.CSSProperties };
 }
