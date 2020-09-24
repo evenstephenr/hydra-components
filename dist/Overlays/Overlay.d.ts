@@ -1,6 +1,11 @@
 import React from "react";
 import { BackgroundProps } from "./Backgrounds";
-declare type ProviderProps = {
+export declare type OverlayContext = {
+    isActive: boolean;
+    activate: CB<OpenOptions, void>;
+    deactivate: Noop<void>;
+} & OverlayProviderProps;
+export declare type OverlayProviderProps = {
     componentMap: {
         [k: string]: React.ReactNode;
     };
@@ -8,13 +13,8 @@ declare type ProviderProps = {
 declare type OpenOptions = {
     component: string;
 };
-declare type Context = {
-    isActive: boolean;
-    activate: CB<OpenOptions, void>;
-    deactivate: Noop<void>;
-} & ProviderProps;
 export declare const Overlay: {
-    Consumer: React.Consumer<Context | null>;
-    Provider: React.FC<ProviderProps>;
+    Consumer: React.Consumer<OverlayContext | null>;
+    Provider: React.FC<OverlayProviderProps>;
 };
 export {};

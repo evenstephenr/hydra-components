@@ -1,5 +1,5 @@
 import React from "react";
-import { Overlay } from "components";
+import { Overlay, Modal } from "components";
 import "./App.css";
 
 const SampleCustom = () => {
@@ -19,14 +19,20 @@ const Activator = () => (
     {(context) => {
       if (!context) return null;
       return (
-        <button onClick={() => context.activate({ component: "DEFAULT" })}>
-          activate
-        </button>
+        <>
+          <button onClick={() => context.activate({ component: "DEFAULT" })}>
+            activate
+          </button>
+          <button onClick={() => context.activate({ component: "MODAL" })}>
+            activate Modal
+          </button>
+        </>
       );
     }}
   </Overlay.Consumer>
 );
 
+/** Hooking into Overlay.Consumer directly to build a custom Component */
 const Default = () => (
   <Overlay.Consumer>
     {(context) => {
@@ -41,8 +47,16 @@ const Default = () => (
   </Overlay.Consumer>
 );
 
+/** Using a stock Modal */
+const Message = () => (
+  <Modal>
+    <div>hello hi hey</div>
+  </Modal>
+);
+
 const componentMap = {
   DEFAULT: Default,
+  MODAL: Message,
 };
 
 export const App = () => (
@@ -51,7 +65,7 @@ export const App = () => (
       style={{
         width: "100vw",
         height: "100vh",
-        backgroundColor: "#f3f3f3",
+        backgroundColor: "#fff",
       }}
     >
       <div>heyo</div>

@@ -87,7 +87,7 @@ const {
 const OverlayProvider = ({
   children,
   backgroundType,
-  backgroundThreshold: _backgroundThreshold = 0.45,
+  backgroundThreshold: _backgroundThreshold = 0.25,
   componentMap
 }) => {
   const [overlayState, setOverlayState] = useState({
@@ -131,18 +131,60 @@ const OverlayProvider = ({
       height: "100vh",
       pointerEvents: isActive ? "initial" : "none"
     }
-  }, isActive && Component && React.createElement(Background, {
+  }, isActive && React.createElement(Background, {
     backgroundType: backgroundType,
     backgroundThreshold: _backgroundThreshold
-  }, React.createElement("div", {
-    id: "hydra-overlay-modal-container"
-  }, React.createElement(Component, null)))));
+  }, React.createElement(Component, null))));
 };
 
+const OverlayConsumer = C;
 const Overlay = {
-  Consumer: C,
+  Consumer: OverlayConsumer,
   Provider: OverlayProvider
 };
 
-export { Alert, BACKGROUND_TYPE, Background, BlurryBackground, Button, DarkBackground, NoBackground, Overlay };
+const ModalHeader = ({
+  headerText,
+  closeModal
+}) => React.createElement("div", {
+  id: "hydra-modal-header"
+}, React.createElement("p", null, headerText), React.createElement("button", {
+  onClick: () => closeModal()
+}, "X"));
+const ModalBody = ({
+  children
+}) => React.createElement("div", {
+  id: "hydra-modal-body"
+}, children);
+const ModalFooter = ({
+  closeModal
+}) => React.createElement("div", null, React.createElement("button", {
+  onClick: () => closeModal()
+}, "close"));
+const ModalContainer = ({
+  children,
+  deactivate,
+  headerText,
+  withHeader: _withHeader = true,
+  Header: _Header = ModalHeader,
+  Body: _Body = ModalBody,
+  withFooter: _withFooter = true,
+  Footer: _Footer = ModalFooter
+}) => React.createElement("div", {
+  id: "hydra-overlay-modal"
+}, _withHeader && React.createElement(_Header, {
+  closeModal: deactivate,
+  headerText: headerText
+}), React.createElement(_Body, null, children), _withFooter && React.createElement(_Footer, {
+  closeModal: deactivate
+}));
+const Modal = props => React.createElement(Overlay.Consumer, null, context => {
+  if (!context) return null;
+  const {
+    Container = ModalContainer
+  } = props;
+  return React.createElement(Container, Object.assign({}, props, context));
+});
+
+export { Alert, BACKGROUND_TYPE, Background, BlurryBackground, Button, DarkBackground, Modal, ModalBody, ModalContainer, ModalFooter, ModalHeader, NoBackground, Overlay };
 //# sourceMappingURL=index.modern.js.map

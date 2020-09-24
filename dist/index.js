@@ -103,7 +103,7 @@ var OverlayProvider = function OverlayProvider(_ref) {
   var children = _ref.children,
       backgroundType = _ref.backgroundType,
       _ref$backgroundThresh = _ref.backgroundThreshold,
-      backgroundThreshold = _ref$backgroundThresh === void 0 ? 0.45 : _ref$backgroundThresh,
+      backgroundThreshold = _ref$backgroundThresh === void 0 ? 0.25 : _ref$backgroundThresh,
       componentMap = _ref.componentMap;
 
   var _useState = React.useState({
@@ -150,17 +150,73 @@ var OverlayProvider = function OverlayProvider(_ref) {
       height: "100vh",
       pointerEvents: isActive ? "initial" : "none"
     }
-  }, isActive && Component && React__default.createElement(Background, {
+  }, isActive && React__default.createElement(Background, {
     backgroundType: backgroundType,
     backgroundThreshold: backgroundThreshold
-  }, React__default.createElement("div", {
-    id: "hydra-overlay-modal-container"
-  }, React__default.createElement(Component, null)))));
+  }, React__default.createElement(Component, null))));
 };
 
+var OverlayConsumer = C;
 var Overlay = {
-  Consumer: C,
+  Consumer: OverlayConsumer,
   Provider: OverlayProvider
+};
+
+var ModalHeader = function ModalHeader(_ref) {
+  var headerText = _ref.headerText,
+      closeModal = _ref.closeModal;
+  return React__default.createElement("div", {
+    id: "hydra-modal-header"
+  }, React__default.createElement("p", null, headerText), React__default.createElement("button", {
+    onClick: function onClick() {
+      return closeModal();
+    }
+  }, "X"));
+};
+var ModalBody = function ModalBody(_ref2) {
+  var children = _ref2.children;
+  return React__default.createElement("div", {
+    id: "hydra-modal-body"
+  }, children);
+};
+var ModalFooter = function ModalFooter(_ref3) {
+  var closeModal = _ref3.closeModal;
+  return React__default.createElement("div", null, React__default.createElement("button", {
+    onClick: function onClick() {
+      return closeModal();
+    }
+  }, "close"));
+};
+var ModalContainer = function ModalContainer(_ref4) {
+  var children = _ref4.children,
+      deactivate = _ref4.deactivate,
+      headerText = _ref4.headerText,
+      _ref4$withHeader = _ref4.withHeader,
+      withHeader = _ref4$withHeader === void 0 ? true : _ref4$withHeader,
+      _ref4$Header = _ref4.Header,
+      Header = _ref4$Header === void 0 ? ModalHeader : _ref4$Header,
+      _ref4$Body = _ref4.Body,
+      Body = _ref4$Body === void 0 ? ModalBody : _ref4$Body,
+      _ref4$withFooter = _ref4.withFooter,
+      withFooter = _ref4$withFooter === void 0 ? true : _ref4$withFooter,
+      _ref4$Footer = _ref4.Footer,
+      Footer = _ref4$Footer === void 0 ? ModalFooter : _ref4$Footer;
+  return React__default.createElement("div", {
+    id: "hydra-overlay-modal"
+  }, withHeader && React__default.createElement(Header, {
+    closeModal: deactivate,
+    headerText: headerText
+  }), React__default.createElement(Body, null, children), withFooter && React__default.createElement(Footer, {
+    closeModal: deactivate
+  }));
+};
+var Modal = function Modal(props) {
+  return React__default.createElement(Overlay.Consumer, null, function (context) {
+    if (!context) return null;
+    var _props$Container = props.Container,
+        Container = _props$Container === void 0 ? ModalContainer : _props$Container;
+    return React__default.createElement(Container, Object.assign({}, props, context));
+  });
 };
 
 exports.Alert = Alert;
@@ -168,6 +224,11 @@ exports.Background = Background;
 exports.BlurryBackground = BlurryBackground;
 exports.Button = Button;
 exports.DarkBackground = DarkBackground;
+exports.Modal = Modal;
+exports.ModalBody = ModalBody;
+exports.ModalContainer = ModalContainer;
+exports.ModalFooter = ModalFooter;
+exports.ModalHeader = ModalHeader;
 exports.NoBackground = NoBackground;
 exports.Overlay = Overlay;
 //# sourceMappingURL=index.js.map
