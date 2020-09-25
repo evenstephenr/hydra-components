@@ -12,29 +12,8 @@ const Button = props => {
     children,
     ...rest
   } = props;
-  console.log("hello from hydra/packages/components");
   return React.createElement("button", Object.assign({}, rest), children);
 };
-const Close = ({
-  close,
-  style
-}) => React.createElement("button", {
-  style: {
-    fontSize: "32px",
-    width: "32px",
-    height: "32px",
-    lineHeight: "32px",
-    transform: "rotate(45deg)",
-    borderRadius: "32px",
-    background: "none",
-    border: "none",
-    outline: "none",
-    cursor: "pointer",
-    padding: "unset",
-    ...style
-  },
-  onClick: () => close()
-}, "+");
 
 const COLOR = {
   GRAY: {
@@ -199,6 +178,31 @@ const Overlay = {
   Provider: OverlayProvider
 };
 
+const Close = props => React.createElement(Button, Object.assign({}, props, {
+  style: {
+    position: "relative",
+    fontSize: "32px",
+    width: "32px",
+    height: "32px",
+    lineHeight: "32px",
+    background: "none",
+    border: "none",
+    outlineOffset: "-6px",
+    cursor: "pointer",
+    padding: "unset",
+    ...props.style
+  },
+  onClick: () => props.onClick()
+}), React.createElement("div", {
+  style: {
+    position: "absolute",
+    width: "32px",
+    height: "32px",
+    transform: "rotate(45deg)",
+    borderRadius: "32px",
+    top: "0px"
+  }
+}, "+"));
 const ModalHeader = ({
   headerText,
   closeModal,
@@ -216,12 +220,13 @@ const ModalHeader = ({
     lineHeight: "32px"
   }
 }, headerText), React.createElement(Close, {
-  close: () => closeModal(),
+  onClick: () => closeModal(),
   style: {
     position: "absolute",
     top: "0px",
     right: "0px"
-  }
+  },
+  autoFocus: true
 }));
 const ModalBody = ({
   children,

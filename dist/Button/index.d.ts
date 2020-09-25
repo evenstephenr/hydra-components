@@ -1,11 +1,3 @@
-/// <reference path="../src/global.d.ts" />
-import React, { ReactNode } from "react";
-declare type ButtonProps = {
-    children: ReactNode;
-} & ReactButton;
-export declare const Button: (props: ButtonProps) => JSX.Element;
-declare type CloseProps = {
-    close: () => void;
-} & StyleOverride;
-export declare const Close: React.FC<CloseProps>;
-export {};
+import { FC } from "react";
+/** This is a generic Button component meant to be extended with any functionality you want */
+export declare const Button: FC<ReactButton>;

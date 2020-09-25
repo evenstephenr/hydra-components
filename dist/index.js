@@ -45,30 +45,7 @@ var Button = function Button(props) {
   var children = props.children,
       rest = _objectWithoutPropertiesLoose(props, ["children"]);
 
-  console.log("hello from hydra/packages/components");
   return React__default.createElement("button", Object.assign({}, rest), children);
-};
-var Close = function Close(_ref) {
-  var close = _ref.close,
-      style = _ref.style;
-  return React__default.createElement("button", {
-    style: _extends({
-      fontSize: "32px",
-      width: "32px",
-      height: "32px",
-      lineHeight: "32px",
-      transform: "rotate(45deg)",
-      borderRadius: "32px",
-      background: "none",
-      border: "none",
-      outline: "none",
-      cursor: "pointer",
-      padding: "unset"
-    }, style),
-    onClick: function onClick() {
-      return close();
-    }
-  }, "+");
 };
 
 var COLOR = {
@@ -235,6 +212,34 @@ var Overlay = {
   Provider: OverlayProvider
 };
 
+var Close = function Close(props) {
+  return React__default.createElement(Button, Object.assign({}, props, {
+    style: _extends({
+      position: "relative",
+      fontSize: "32px",
+      width: "32px",
+      height: "32px",
+      lineHeight: "32px",
+      background: "none",
+      border: "none",
+      outlineOffset: "-6px",
+      cursor: "pointer",
+      padding: "unset"
+    }, props.style),
+    onClick: function onClick() {
+      return props.onClick();
+    }
+  }), React__default.createElement("div", {
+    style: {
+      position: "absolute",
+      width: "32px",
+      height: "32px",
+      transform: "rotate(45deg)",
+      borderRadius: "32px",
+      top: "0px"
+    }
+  }, "+"));
+};
 var ModalHeader = function ModalHeader(_ref) {
   var headerText = _ref.headerText,
       closeModal = _ref.closeModal,
@@ -251,14 +256,15 @@ var ModalHeader = function ModalHeader(_ref) {
       lineHeight: "32px"
     }
   }, headerText), React__default.createElement(Close, {
-    close: function close() {
+    onClick: function onClick() {
       return closeModal();
     },
     style: {
       position: "absolute",
       top: "0px",
       right: "0px"
-    }
+    },
+    autoFocus: true
   }));
 };
 var ModalBody = function ModalBody(_ref2) {

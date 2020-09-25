@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { Overlay, OverlayContext } from "./Overlay";
 import { COLOR } from "../Theme";
-import { Close } from "../Button";
+import { Button } from "../Button";
 
 /**
  * TODO:
@@ -9,6 +9,44 @@ import { Close } from "../Button";
  * - add style overrides for each part of the Modal (style prop)
  * - add logic to automatically take up full width and height of page for smaller screens
  */
+
+type CloseProps = {
+  onClick: () => void;
+} & StyleOverride &
+  ReactButton;
+/** This is a super-specific close button that's got terrible CSS but look ma, no SVG's! */
+export const Close: React.FC<CloseProps> = (props) => (
+  <Button
+    {...props}
+    style={{
+      position: "relative",
+      fontSize: "32px",
+      width: "32px",
+      height: "32px",
+      lineHeight: "32px",
+      background: "none",
+      border: "none",
+      outlineOffset: "-6px",
+      cursor: "pointer",
+      padding: "unset",
+      ...props.style,
+    }}
+    onClick={() => props.onClick()}
+  >
+    <div
+      style={{
+        position: "absolute",
+        width: "32px",
+        height: "32px",
+        transform: "rotate(45deg)",
+        borderRadius: "32px",
+        top: "0px",
+      }}
+    >
+      +
+    </div>
+  </Button>
+);
 
 type ModalHeaderProps = {
   headerText?: string;
@@ -38,8 +76,9 @@ export const ModalHeader: FC<ModalHeaderProps> = ({
       </h3>
     )}
     <Close
-      close={() => closeModal()}
+      onClick={() => closeModal()}
       style={{ position: "absolute", top: "0px", right: "0px" }}
+      autoFocus
     />
   </div>
 );
