@@ -47,6 +47,17 @@ var Button = function Button(props) {
 
   return React__default.createElement("button", Object.assign({}, rest), children);
 };
+var ButtonRow = function ButtonRow(_ref) {
+  var children = _ref.children,
+      _ref$position = _ref.position,
+      position = _ref$position === void 0 ? "right" : _ref$position,
+      style = _ref.style;
+  return React__default.createElement("div", {
+    style: _extends({
+      textAlign: position
+    }, style)
+  }, children);
+};
 
 var COLOR = {
   GRAY: {
@@ -273,13 +284,17 @@ var ModalBody = function ModalBody(_ref2) {
   return React__default.createElement("div", {
     id: "hydra-modal-body",
     style: _extends({
-      flex: 1
+      flex: 1,
+      paddingTop: "16px",
+      paddingBottom: "24px"
     }, style)
   }, children);
 };
 var ModalFooter = function ModalFooter(_ref3) {
   var closeModal = _ref3.closeModal;
-  return React__default.createElement("div", null, React__default.createElement("button", {
+  return React__default.createElement(ButtonRow, {
+    position: "right"
+  }, React__default.createElement(Button, {
     onClick: function onClick() {
       return closeModal();
     }
@@ -343,6 +358,7 @@ exports.Alert = Alert;
 exports.Background = Background;
 exports.BlurryBackground = BlurryBackground;
 exports.Button = Button;
+exports.ButtonRow = ButtonRow;
 exports.Close = Close;
 exports.DarkBackground = DarkBackground;
 exports.Modal = Modal;

@@ -14,6 +14,16 @@ const Button = props => {
   } = props;
   return React.createElement("button", Object.assign({}, rest), children);
 };
+const ButtonRow = ({
+  children,
+  position: _position = "right",
+  style
+}) => React.createElement("div", {
+  style: {
+    textAlign: _position,
+    ...style
+  }
+}, children);
 
 const COLOR = {
   GRAY: {
@@ -235,12 +245,16 @@ const ModalBody = ({
   id: "hydra-modal-body",
   style: {
     flex: 1,
+    paddingTop: "16px",
+    paddingBottom: "24px",
     ...style
   }
 }, children);
 const ModalFooter = ({
   closeModal
-}) => React.createElement("div", null, React.createElement("button", {
+}) => React.createElement(ButtonRow, {
+  position: "right"
+}, React.createElement(Button, {
   onClick: () => closeModal()
 }, "close"));
 const ModalContainer = ({
@@ -289,5 +303,5 @@ const Modal = props => React.createElement(Overlay.Consumer, null, context => {
   return React.createElement(Container, Object.assign({}, props, context));
 });
 
-export { Alert, BACKGROUND_TYPE, Background, BlurryBackground, Button, Close, DarkBackground, Modal, ModalBody, ModalContainer, ModalFooter, ModalHeader, NoBackground, Overlay };
+export { Alert, BACKGROUND_TYPE, Background, BlurryBackground, Button, ButtonRow, Close, DarkBackground, Modal, ModalBody, ModalContainer, ModalFooter, ModalHeader, NoBackground, Overlay };
 //# sourceMappingURL=index.modern.js.map

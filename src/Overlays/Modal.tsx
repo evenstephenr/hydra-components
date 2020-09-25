@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { Overlay, OverlayContext } from "./Overlay";
 import { COLOR } from "../Theme";
-import { Button } from "../Button";
+import { Button, ButtonRow } from "../Button";
 
 /**
  * TODO:
@@ -88,6 +88,8 @@ export const ModalBody: FC<StyleOverride> = ({ children, style }) => (
     id="hydra-modal-body"
     style={{
       flex: 1,
+      paddingTop: "16px",
+      paddingBottom: "24px",
       ...style,
     }}
   >
@@ -99,9 +101,9 @@ type ModalFooterProps = {
   closeModal: () => void;
 } & StyleOverride;
 export const ModalFooter: FC<ModalFooterProps> = ({ closeModal }) => (
-  <div>
-    <button onClick={() => closeModal()}>close</button>
-  </div>
+  <ButtonRow position="right">
+    <Button onClick={() => closeModal()}>close</Button>
+  </ButtonRow>
 );
 
 type ModalContainerProps = {
