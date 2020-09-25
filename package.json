@@ -1,6 +1,6 @@
 {
   "name": "components",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Hydra component library - written for React, bootstrapped with create-react-library",
   "author": "evenstephenr <github@ramirs.com>",
   "homepage": "https://github.com/evenstephenr/hydra-components/",
