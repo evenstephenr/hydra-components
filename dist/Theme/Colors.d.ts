@@ -1,4 +1,8 @@
-/** https://flatuicolors.com/palette/es */
+/**
+ * TODO:
+ *
+ * - Do we need to strongly type this?
+ */
 export declare const COLOR: {
     /** https://flatuicolors.com/palette/cn */
     GRAY: {
@@ -11,4 +15,10 @@ export declare const COLOR: {
         700: string;
         800: string;
     };
+    hexToRgb: (hex: string) => {
+        r: number;
+        g: number;
+        b: number;
+    } | null;
+    asRGB: (color: string, id: string) => string;
 };

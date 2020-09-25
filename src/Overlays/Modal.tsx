@@ -105,7 +105,7 @@ export const ModalContainer: FC<ModalProps> = ({
       height: `${height}px`,
       backgroundColor: "#fff",
       borderRadius: "2px",
-      boxShadow: `0px 0px 8px 4px ${COLOR.GRAY[200]}`,
+      boxShadow: `0px 0px 8px 4px ${COLOR.GRAY[300]}`,
       position: "absolute",
       left: "50%",
       marginLeft: `-${Math.floor(width / 2)}px`,

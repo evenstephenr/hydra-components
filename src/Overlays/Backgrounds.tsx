@@ -1,4 +1,5 @@
 import React, { FC, useEffect } from "react";
+import { COLOR } from "../Theme";
 
 export enum BACKGROUND_TYPE {
   NONE = "NONE",
@@ -32,7 +33,10 @@ export const DarkBackground: FC<BackgroundProps> = ({
     style={{
       width: "100%",
       height: "100%",
-      backgroundColor: `rgba(223, 228, 234, ${backgroundThreshold})`,
+      backgroundColor: `rgba(${COLOR.asRGB(
+        "GRAY",
+        "200"
+      )}, ${backgroundThreshold})`,
     }}
   >
     {children}

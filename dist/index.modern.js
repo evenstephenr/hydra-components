@@ -36,6 +36,42 @@ const Close = ({
   onClick: () => close()
 }, "+");
 
+const COLOR = {
+  GRAY: {
+    100: "#ffffff",
+    200: "#f1f2f6",
+    300: "#dfe4ea",
+    400: "#ced6e0",
+    500: "#a4b0be",
+    600: "#747d8c",
+    700: "#57606f",
+    800: "#2f3542"
+  },
+  hexToRgb: hex => {
+    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+      return r + r + g + g + b + b;
+    });
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : null;
+  },
+  asRGB: (color, id) => {
+    const hex = COLOR[color][id];
+    const result = COLOR.hexToRgb(hex);
+    if (!result) throw new Error("reference error, bad COLOR");
+    const {
+      r,
+      g,
+      b
+    } = result;
+    return `${r}, ${g}, ${b}`;
+  }
+};
+
 var BACKGROUND_TYPE;
 
 (function (BACKGROUND_TYPE) {
@@ -61,7 +97,7 @@ const DarkBackground = ({
   style: {
     width: "100%",
     height: "100%",
-    backgroundColor: `rgba(223, 228, 234, ${_backgroundThreshold})`
+    backgroundColor: `rgba(${COLOR.asRGB("GRAY", "200")}, ${_backgroundThreshold})`
   }
 }, children);
 const BlurryBackground = ({
@@ -163,19 +199,6 @@ const Overlay = {
   Provider: OverlayProvider
 };
 
-const COLOR = {
-  GRAY: {
-    100: "#ffffff",
-    200: "#f1f2f6",
-    300: "#dfe4ea",
-    400: "#ced6e0",
-    500: "#a4b0be",
-    600: "#747d8c",
-    700: "#57606f",
-    800: "#2f3542"
-  }
-};
-
 const ModalHeader = ({
   headerText,
   closeModal,
@@ -234,7 +257,7 @@ const ModalContainer = ({
     height: `${_height}px`,
     backgroundColor: "#fff",
     borderRadius: "2px",
-    boxShadow: `0px 0px 8px 4px ${COLOR.GRAY[200]}`,
+    boxShadow: `0px 0px 8px 4px ${COLOR.GRAY[300]}`,
     position: "absolute",
     left: "50%",
     marginLeft: `-${Math.floor(_width / 2)}px`,
