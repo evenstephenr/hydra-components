@@ -1,8 +1,8 @@
 import React, { FC } from "react";
 import { Overlay, OverlayContext } from "./Overlay";
 import { COLOR } from "../Theme";
-import { Button, ButtonRow } from "../Button";
-
+import { Button } from "../Button";
+import { Header, Body, Footer } from "./Shared";
 /**
  * TODO:
  *
@@ -10,100 +10,25 @@ import { Button, ButtonRow } from "../Button";
  * - add logic to automatically take up full width and height of page for smaller screens
  */
 
-type CloseProps = {
-  onClick: () => void;
-} & StyleOverride &
-  ReactButton;
-/** This is a super-specific close button that's got terrible CSS but look ma, no SVG's! */
-export const Close: React.FC<CloseProps> = (props) => (
-  <Button
-    {...props}
-    style={{
-      position: "relative",
-      fontSize: "32px",
-      width: "32px",
-      height: "32px",
-      lineHeight: "32px",
-      background: "none",
-      border: "none",
-      outlineOffset: "-6px",
-      cursor: "pointer",
-      padding: "unset",
-      ...props.style,
-    }}
-    onClick={() => props.onClick()}
-  >
-    <div
-      style={{
-        position: "absolute",
-        width: "32px",
-        height: "32px",
-        transform: "rotate(45deg)",
-        borderRadius: "32px",
-        top: "0px",
-      }}
-    >
-      +
-    </div>
-  </Button>
-);
-
 type ModalHeaderProps = {
   headerText?: string;
   closeModal: () => void;
 } & StyleOverride;
-export const ModalHeader: FC<ModalHeaderProps> = ({
-  headerText,
-  closeModal,
-  style,
-}) => (
-  <div
-    id="hydra-modal-header"
-    style={{
-      minHeight: "32px",
-      position: "relative",
-      ...style,
-    }}
-  >
-    {headerText && (
-      <h3
-        style={{
-          margin: "unset",
-          lineHeight: "32px",
-        }}
-      >
-        {headerText}
-      </h3>
-    )}
-    <Close
-      onClick={() => closeModal()}
-      style={{ position: "absolute", top: "0px", right: "0px" }}
-      autoFocus
-    />
-  </div>
+export const ModalHeader: FC<ModalHeaderProps> = ({ closeModal, ...rest }) => (
+  <Header id="hydra-modal-header" onClick={() => closeModal()} {...rest} />
 );
 
-export const ModalBody: FC<StyleOverride> = ({ children, style }) => (
-  <div
-    id="hydra-modal-body"
-    style={{
-      flex: 1,
-      paddingTop: "16px",
-      paddingBottom: "24px",
-      ...style,
-    }}
-  >
-    {children}
-  </div>
+export const ModalBody: FC<StyleOverride> = (props) => (
+  <Body id="hydra-modal-body" {...props} />
 );
 
 type ModalFooterProps = {
   closeModal: () => void;
 } & StyleOverride;
-export const ModalFooter: FC<ModalFooterProps> = ({ closeModal }) => (
-  <ButtonRow position="right">
+export const ModalFooter: FC<ModalFooterProps> = ({ closeModal, style }) => (
+  <Footer id="hydra-modal-footer" position="right" style={style}>
     <Button onClick={() => closeModal()}>close</Button>
-  </ButtonRow>
+  </Footer>
 );
 
 type ModalContainerProps = {
@@ -158,9 +83,17 @@ export const ModalContainer: FC<ModalProps> = ({
       ...styleOverrides?.container,
     }}
   >
-    {withHeader && <Header closeModal={deactivate} headerText={headerText} />}
+    {withHeader && (
+      <Header
+        closeModal={deactivate}
+        headerText={headerText}
+        style={styleOverrides?.header}
+      />
+    )}
     <Body style={styleOverrides?.body}>{children}</Body>
-    {withFooter && <Footer closeModal={deactivate} />}
+    {withFooter && (
+      <Footer closeModal={deactivate} style={styleOverrides?.footer} />
+    )}
   </div>
 );
 

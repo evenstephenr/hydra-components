@@ -2,6 +2,8 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 
 var React = require('react');
 var React__default = _interopDefault(React);
+var styled = require('styled-components');
+var styled__default = _interopDefault(styled);
 
 function Alert(props) {
   var message = props.message;
@@ -41,18 +43,26 @@ function _objectWithoutPropertiesLoose(source, excluded) {
   return target;
 }
 
-var Button = function Button(props) {
-  var children = props.children,
-      rest = _objectWithoutPropertiesLoose(props, ["children"]);
+function _taggedTemplateLiteralLoose(strings, raw) {
+  if (!raw) {
+    raw = strings.slice(0);
+  }
 
-  return React__default.createElement("button", Object.assign({}, rest), children);
+  strings.raw = raw;
+  return strings;
+}
+
+var Button = function Button(props) {
+  return React__default.createElement("button", Object.assign({}, props));
 };
 var ButtonRow = function ButtonRow(_ref) {
-  var children = _ref.children,
-      _ref$position = _ref.position,
+  var _ref$position = _ref.position,
       position = _ref$position === void 0 ? "right" : _ref$position,
+      id = _ref.id,
+      children = _ref.children,
       style = _ref.style;
   return React__default.createElement("div", {
+    id: id,
     style: _extends({
       textAlign: position
     }, style)
@@ -251,12 +261,13 @@ var Close = function Close(props) {
     }
   }, "+"));
 };
-var ModalHeader = function ModalHeader(_ref) {
-  var headerText = _ref.headerText,
-      closeModal = _ref.closeModal,
+var Header = function Header(_ref) {
+  var id = _ref.id,
+      headerText = _ref.headerText,
+      _onClick = _ref.onClick,
       style = _ref.style;
   return React__default.createElement("div", {
-    id: "hydra-modal-header",
+    id: id,
     style: _extends({
       minHeight: "32px",
       position: "relative"
@@ -268,7 +279,7 @@ var ModalHeader = function ModalHeader(_ref) {
     }
   }, headerText), React__default.createElement(Close, {
     onClick: function onClick() {
-      return closeModal();
+      return _onClick();
     },
     style: {
       position: "absolute",
@@ -278,11 +289,12 @@ var ModalHeader = function ModalHeader(_ref) {
     autoFocus: true
   }));
 };
-var ModalBody = function ModalBody(_ref2) {
+var Body = function Body(_ref2) {
   var children = _ref2.children,
+      id = _ref2.id,
       style = _ref2.style;
   return React__default.createElement("div", {
-    id: "hydra-modal-body",
+    id: id,
     style: _extends({
       flex: 1,
       paddingTop: "16px",
@@ -290,35 +302,58 @@ var ModalBody = function ModalBody(_ref2) {
     }, style)
   }, children);
 };
-var ModalFooter = function ModalFooter(_ref3) {
-  var closeModal = _ref3.closeModal;
-  return React__default.createElement(ButtonRow, {
-    position: "right"
+var Footer = function Footer(props) {
+  return React__default.createElement(ButtonRow, Object.assign({}, props));
+};
+
+var ModalHeader = function ModalHeader(_ref) {
+  var closeModal = _ref.closeModal,
+      rest = _objectWithoutPropertiesLoose(_ref, ["closeModal"]);
+
+  return React__default.createElement(Header, Object.assign({
+    id: "hydra-modal-header",
+    onClick: function onClick() {
+      return closeModal();
+    }
+  }, rest));
+};
+var ModalBody = function ModalBody(props) {
+  return React__default.createElement(Body, Object.assign({
+    id: "hydra-modal-body"
+  }, props));
+};
+var ModalFooter = function ModalFooter(_ref2) {
+  var closeModal = _ref2.closeModal,
+      style = _ref2.style;
+  return React__default.createElement(Footer, {
+    id: "hydra-modal-footer",
+    position: "right",
+    style: style
   }, React__default.createElement(Button, {
     onClick: function onClick() {
       return closeModal();
     }
   }, "close"));
 };
-var ModalContainer = function ModalContainer(_ref4) {
-  var children = _ref4.children,
-      deactivate = _ref4.deactivate,
-      headerText = _ref4.headerText,
-      styleOverrides = _ref4.styleOverrides,
-      _ref4$width = _ref4.width,
-      width = _ref4$width === void 0 ? 600 : _ref4$width,
-      _ref4$height = _ref4.height,
-      height = _ref4$height === void 0 ? 550 : _ref4$height,
-      _ref4$withHeader = _ref4.withHeader,
-      withHeader = _ref4$withHeader === void 0 ? true : _ref4$withHeader,
-      _ref4$Header = _ref4.Header,
-      Header = _ref4$Header === void 0 ? ModalHeader : _ref4$Header,
-      _ref4$Body = _ref4.Body,
-      Body = _ref4$Body === void 0 ? ModalBody : _ref4$Body,
-      _ref4$withFooter = _ref4.withFooter,
-      withFooter = _ref4$withFooter === void 0 ? true : _ref4$withFooter,
-      _ref4$Footer = _ref4.Footer,
-      Footer = _ref4$Footer === void 0 ? ModalFooter : _ref4$Footer;
+var ModalContainer = function ModalContainer(_ref3) {
+  var children = _ref3.children,
+      deactivate = _ref3.deactivate,
+      headerText = _ref3.headerText,
+      styleOverrides = _ref3.styleOverrides,
+      _ref3$width = _ref3.width,
+      width = _ref3$width === void 0 ? 600 : _ref3$width,
+      _ref3$height = _ref3.height,
+      height = _ref3$height === void 0 ? 550 : _ref3$height,
+      _ref3$withHeader = _ref3.withHeader,
+      withHeader = _ref3$withHeader === void 0 ? true : _ref3$withHeader,
+      _ref3$Header = _ref3.Header,
+      Header = _ref3$Header === void 0 ? ModalHeader : _ref3$Header,
+      _ref3$Body = _ref3.Body,
+      Body = _ref3$Body === void 0 ? ModalBody : _ref3$Body,
+      _ref3$withFooter = _ref3.withFooter,
+      withFooter = _ref3$withFooter === void 0 ? true : _ref3$withFooter,
+      _ref3$Footer = _ref3.Footer,
+      Footer = _ref3$Footer === void 0 ? ModalFooter : _ref3$Footer;
   return React__default.createElement("div", {
     id: "hydra-overlay-modal",
     style: _extends({
@@ -338,11 +373,13 @@ var ModalContainer = function ModalContainer(_ref4) {
     }, styleOverrides === null || styleOverrides === void 0 ? void 0 : styleOverrides.container)
   }, withHeader && React__default.createElement(Header, {
     closeModal: deactivate,
-    headerText: headerText
+    headerText: headerText,
+    style: styleOverrides === null || styleOverrides === void 0 ? void 0 : styleOverrides.header
   }), React__default.createElement(Body, {
     style: styleOverrides === null || styleOverrides === void 0 ? void 0 : styleOverrides.body
   }, children), withFooter && React__default.createElement(Footer, {
-    closeModal: deactivate
+    closeModal: deactivate,
+    style: styleOverrides === null || styleOverrides === void 0 ? void 0 : styleOverrides.footer
   }));
 };
 var Modal = function Modal(props) {
@@ -354,12 +391,164 @@ var Modal = function Modal(props) {
   });
 };
 
+function _templateObject2() {
+  var data = _taggedTemplateLiteralLoose(["\n  to { \n    transform: translateX(", "px);\n  }\n"]);
+
+  _templateObject2 = function _templateObject2() {
+    return data;
+  };
+
+  return data;
+}
+var slideLeft = function slideLeft(translateX) {
+  return styled.keyframes(_templateObject2(), translateX);
+};
+
+function _templateObject3() {
+  var data = _taggedTemplateLiteralLoose(["\n  ", "\n"]);
+
+  _templateObject3 = function _templateObject3() {
+    return data;
+  };
+
+  return data;
+}
+
+function _templateObject2$1() {
+  var data = _taggedTemplateLiteralLoose(["\n  right: 0px;\n  animation: ", " 250ms ease-out forwards;\n"]);
+
+  _templateObject2$1 = function _templateObject2() {
+    return data;
+  };
+
+  return data;
+}
+
+function _templateObject() {
+  var data = _taggedTemplateLiteralLoose(["\n  right: -600px;\n  animation: ", " 250ms ease-out forwards;\n"]);
+
+  _templateObject = function _templateObject() {
+    return data;
+  };
+
+  return data;
+}
+var PanelHeader = function PanelHeader(_ref) {
+  var closePanel = _ref.closePanel,
+      rest = _objectWithoutPropertiesLoose(_ref, ["closePanel"]);
+
+  return React__default.createElement(Header, Object.assign({
+    id: "hydra-panel-header",
+    onClick: function onClick() {
+      return closePanel();
+    }
+  }, rest));
+};
+var PanelFooter = function PanelFooter(_ref2) {
+  var closePanel = _ref2.closePanel,
+      style = _ref2.style;
+  return React__default.createElement(Footer, {
+    id: "hydra-panel-footer",
+    position: "right",
+    style: style
+  }, React__default.createElement(Button, {
+    onClick: function onClick() {
+      return closePanel();
+    }
+  }, "Close"));
+};
+var PanelBody = function PanelBody(props) {
+  return React__default.createElement(Body, Object.assign({
+    id: "hydra-panel-body"
+  }, props));
+};
+
+var slideInMixin = function slideInMixin() {
+  return styled.css(_templateObject(), slideLeft(-600));
+};
+
+var slideOutMixin = function slideOutMixin() {
+  return styled.css(_templateObject2$1(), slideLeft(600));
+};
+
+var PanelWrapper = styled__default.div(_templateObject3(), function (props) {
+  return props.isOpen ? slideInMixin : slideOutMixin;
+});
+var PanelContainer = function PanelContainer(_ref3) {
+  var children = _ref3.children,
+      styleOverrides = _ref3.styleOverrides,
+      _ref3$width = _ref3.width,
+      width = _ref3$width === void 0 ? "600px" : _ref3$width,
+      _ref3$height = _ref3.height,
+      height = _ref3$height === void 0 ? "100%" : _ref3$height,
+      _ref3$withHeader = _ref3.withHeader,
+      withHeader = _ref3$withHeader === void 0 ? true : _ref3$withHeader,
+      headerText = _ref3.headerText,
+      _ref3$Header = _ref3.Header,
+      Header = _ref3$Header === void 0 ? PanelHeader : _ref3$Header,
+      _ref3$Body = _ref3.Body,
+      Body = _ref3$Body === void 0 ? PanelBody : _ref3$Body,
+      _ref3$withFooter = _ref3.withFooter,
+      withFooter = _ref3$withFooter === void 0 ? true : _ref3$withFooter,
+      _ref3$Footer = _ref3.Footer,
+      Footer = _ref3$Footer === void 0 ? PanelFooter : _ref3$Footer,
+      deactivate = _ref3.deactivate;
+
+  var _useState = React.useState(true),
+      isOpen = _useState[0],
+      setIsOpen = _useState[1];
+
+  return React__default.createElement(PanelWrapper, {
+    id: "hydra-overlay-panel",
+    isOpen: isOpen,
+    style: _extends({
+      width: width,
+      height: height,
+      position: "fixed",
+      top: "0px",
+      backgroundColor: "#fff",
+      display: "flex",
+      flexDirection: "column",
+      boxSizing: "border-box",
+      padding: "14px 16px 24px 16px",
+      overflow: "auto",
+      wordBreak: "break-word"
+    }, styleOverrides === null || styleOverrides === void 0 ? void 0 : styleOverrides.container)
+  }, withHeader && React__default.createElement(Header, {
+    headerText: headerText,
+    style: styleOverrides === null || styleOverrides === void 0 ? void 0 : styleOverrides.header,
+    closePanel: function closePanel() {
+      return deactivate();
+    }
+  }), React__default.createElement(Body, {
+    style: styleOverrides === null || styleOverrides === void 0 ? void 0 : styleOverrides.body
+  }, children), withFooter && React__default.createElement(Footer, {
+    closePanel: function closePanel() {
+      setIsOpen(false);
+      setTimeout(function () {
+        return deactivate();
+      }, 250);
+    },
+    style: styleOverrides === null || styleOverrides === void 0 ? void 0 : styleOverrides.footer
+  }));
+};
+var Panel = function Panel(props) {
+  return React__default.createElement(Overlay.Consumer, null, function (context) {
+    if (!context) return null;
+
+    var _props$Container = props.Container,
+        Container = _props$Container === void 0 ? PanelContainer : _props$Container,
+        rest = _objectWithoutPropertiesLoose(props, ["Container"]);
+
+    return React__default.createElement(Container, Object.assign({}, rest, context));
+  });
+};
+
 exports.Alert = Alert;
 exports.Background = Background;
 exports.BlurryBackground = BlurryBackground;
 exports.Button = Button;
 exports.ButtonRow = ButtonRow;
-exports.Close = Close;
 exports.DarkBackground = DarkBackground;
 exports.Modal = Modal;
 exports.ModalBody = ModalBody;
@@ -368,4 +557,9 @@ exports.ModalFooter = ModalFooter;
 exports.ModalHeader = ModalHeader;
 exports.NoBackground = NoBackground;
 exports.Overlay = Overlay;
+exports.Panel = Panel;
+exports.PanelBody = PanelBody;
+exports.PanelContainer = PanelContainer;
+exports.PanelFooter = PanelFooter;
+exports.PanelHeader = PanelHeader;
 //# sourceMappingURL=index.js.map

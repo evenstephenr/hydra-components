@@ -89,9 +89,7 @@ const OverlayProvider: React.FC<OverlayProviderProps> = ({
             backgroundType={backgroundType}
             backgroundThreshold={backgroundThreshold}
           >
-            {/* <div id="hydra-overlay-modal-container"> */}
             <Component />
-            {/* </div> */}
           </Background>
         )}
       </div>

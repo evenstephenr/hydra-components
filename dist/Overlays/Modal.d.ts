@@ -6,11 +6,6 @@ import { OverlayContext } from "./Overlay";
  * - add style overrides for each part of the Modal (style prop)
  * - add logic to automatically take up full width and height of page for smaller screens
  */
-declare type CloseProps = {
-    onClick: () => void;
-} & StyleOverride & ReactButton;
-/** This is a super-specific close button that's got terrible CSS but look ma, no SVG's! */
-export declare const Close: React.FC<CloseProps>;
 declare type ModalHeaderProps = {
     headerText?: string;
     closeModal: () => void;

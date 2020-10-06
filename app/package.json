@@ -9,10 +9,12 @@
     "start": "react-scripts start"
   },
   "devDependencies": {
+    "components": "file:..",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-is": "^16.13.1",
     "react-scripts": "^3.4.3",
-    "components": "file:.."
+    "styled-components": "^5.2.0"
   },
   "browserslist": {
     "production": [

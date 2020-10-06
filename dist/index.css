@@ -1,0 +1,19 @@
+/* The animation code */
+@keyframes _animate__example__1VMKu {
+  from {
+    background-color: red;
+  }
+  to {
+    background-color: yellow;
+  }
+}
+
+._animate__animateExample__1G4E9 {
+  animation-name: _animate__example__1VMKu;
+  animation-duration: 4s;
+}
+
+#_animate__hydra-overlay-panel__1btFP {
+  animation-name: _animate__example__1VMKu;
+  animation-duration: 4s;
+}

@@ -1,5 +1,5 @@
 import React from "react";
-import { Overlay, Modal } from "components";
+import { Overlay, Modal, Panel } from "components";
 import "./App.css";
 
 const SampleCustom = () => {
@@ -21,10 +21,13 @@ const Activator = () => (
       return (
         <>
           <button onClick={() => context.activate({ component: "DEFAULT" })}>
-            activate
+            activate custom
           </button>
           <button onClick={() => context.activate({ component: "MODAL" })}>
             activate Modal
+          </button>
+          <button onClick={() => context.activate({ component: "PANEL" })}>
+            activate Panel
           </button>
         </>
       );
@@ -54,9 +57,16 @@ const Message = () => (
   </Modal>
 );
 
+const Flyout = () => (
+  <Panel headerText="This is a Panel!">
+    <div>hello hi hey</div>
+  </Panel>
+);
+
 const componentMap = {
   DEFAULT: Default,
   MODAL: Message,
+  PANEL: Flyout,
 };
 
 export const App = () => (

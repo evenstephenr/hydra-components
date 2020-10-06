@@ -1,62 +1,28 @@
 import React, { useEffect, createContext, useState } from 'react';
+import styled, { keyframes, css } from 'styled-components';
 
 function Alert(props) {
-  var message = props.message;
+  const {
+    message
+  } = props;
   return alert(message);
 }
 
-function _extends() {
-  _extends = Object.assign || function (target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
-      }
-    }
-
-    return target;
-  };
-
-  return _extends.apply(this, arguments);
-}
-
-function _objectWithoutPropertiesLoose(source, excluded) {
-  if (source == null) return {};
-  var target = {};
-  var sourceKeys = Object.keys(source);
-  var key, i;
-
-  for (i = 0; i < sourceKeys.length; i++) {
-    key = sourceKeys[i];
-    if (excluded.indexOf(key) >= 0) continue;
-    target[key] = source[key];
+const Button = props => React.createElement("button", Object.assign({}, props));
+const ButtonRow = ({
+  position: _position = "right",
+  id,
+  children,
+  style
+}) => React.createElement("div", {
+  id: id,
+  style: {
+    textAlign: _position,
+    ...style
   }
+}, children);
 
-  return target;
-}
-
-var Button = function Button(props) {
-  var children = props.children,
-      rest = _objectWithoutPropertiesLoose(props, ["children"]);
-
-  return React.createElement("button", Object.assign({}, rest), children);
-};
-var ButtonRow = function ButtonRow(_ref) {
-  var children = _ref.children,
-      _ref$position = _ref.position,
-      position = _ref$position === void 0 ? "right" : _ref$position,
-      style = _ref.style;
-  return React.createElement("div", {
-    style: _extends({
-      textAlign: position
-    }, style)
-  }, children);
-};
-
-var COLOR = {
+const COLOR = {
   GRAY: {
     100: "#ffffff",
     200: "#f1f2f6",
@@ -67,7 +33,7 @@ var COLOR = {
     700: "#57606f",
     800: "#2f3542"
   },
-  hexToRgb: function hexToRgb(hex) {
+  hexToRgb: hex => {
     var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
     hex = hex.replace(shorthandRegex, function (m, r, g, b) {
       return r + r + g + g + b + b;
@@ -79,14 +45,16 @@ var COLOR = {
       b: parseInt(result[3], 16)
     } : null;
   },
-  asRGB: function asRGB(color, id) {
-    var hex = COLOR[color][id];
-    var result = COLOR.hexToRgb(hex);
+  asRGB: (color, id) => {
+    const hex = COLOR[color][id];
+    const result = COLOR.hexToRgb(hex);
     if (!result) throw new Error("reference error, bad COLOR");
-    var r = result.r,
-        g = result.g,
-        b = result.b;
-    return r + ", " + g + ", " + b;
+    const {
+      r,
+      g,
+      b
+    } = result;
+    return `${r}, ${g}, ${b}`;
   }
 };
 
@@ -98,38 +66,35 @@ var BACKGROUND_TYPE;
   BACKGROUND_TYPE["BLUR"] = "BLUR";
 })(BACKGROUND_TYPE || (BACKGROUND_TYPE = {}));
 
-var NoBackground = function NoBackground(_ref) {
-  var children = _ref.children;
-  return React.createElement("div", {
-    id: "hydra-overlay-background-container-none",
-    style: {
-      width: "100%",
-      height: "100%"
-    }
-  }, children);
-};
-var DarkBackground = function DarkBackground(_ref2) {
-  var children = _ref2.children,
-      _ref2$backgroundThres = _ref2.backgroundThreshold,
-      backgroundThreshold = _ref2$backgroundThres === void 0 ? 0.65 : _ref2$backgroundThres;
-  return React.createElement("div", {
-    id: "hydra-overlay-background-container-darken",
-    style: {
-      width: "100%",
-      height: "100%",
-      backgroundColor: "rgba(" + COLOR.asRGB("GRAY", "200") + ", " + backgroundThreshold + ")"
-    }
-  }, children);
-};
-var BlurryBackground = function BlurryBackground(_ref3) {
-  var children = _ref3.children,
-      _ref3$backgroundThres = _ref3.backgroundThreshold,
-      backgroundThreshold = _ref3$backgroundThres === void 0 ? 0.45 : _ref3$backgroundThres;
-  useEffect(function () {
-    var wrapper = document.getElementById("hydra-overlay-wrapper");
+const NoBackground = ({
+  children
+}) => React.createElement("div", {
+  id: "hydra-overlay-background-container-none",
+  style: {
+    width: "100%",
+    height: "100%"
+  }
+}, children);
+const DarkBackground = ({
+  children,
+  backgroundThreshold: _backgroundThreshold = 0.65
+}) => React.createElement("div", {
+  id: "hydra-overlay-background-container-darken",
+  style: {
+    width: "100%",
+    height: "100%",
+    backgroundColor: `rgba(${COLOR.asRGB("GRAY", "200")}, ${_backgroundThreshold})`
+  }
+}, children);
+const BlurryBackground = ({
+  children,
+  backgroundThreshold: _backgroundThreshold2 = 0.45
+}) => {
+  useEffect(() => {
+    const wrapper = document.getElementById("hydra-overlay-wrapper");
 
     if (wrapper) {
-      wrapper.style.filter = "blur(" + backgroundThreshold * 10 + "px)";
+      wrapper.style.filter = `blur(${_backgroundThreshold2 * 10}px)`;
     }
   }, []);
   return React.createElement("div", {
@@ -140,7 +105,7 @@ var BlurryBackground = function BlurryBackground(_ref3) {
     }
   }, children);
 };
-var Background = function Background(props) {
+const Background = props => {
   switch (props.backgroundType) {
     case BACKGROUND_TYPE.DARKEN:
       return React.createElement(DarkBackground, Object.assign({}, props));
@@ -156,47 +121,45 @@ var Background = function Background(props) {
   }
 };
 
-var _createContext = createContext(null),
-    C = _createContext.Consumer,
-    P = _createContext.Provider;
+const {
+  Consumer: C,
+  Provider: P
+} = createContext(null);
 
-var OverlayProvider = function OverlayProvider(_ref) {
-  var children = _ref.children,
-      backgroundType = _ref.backgroundType,
-      backgroundThreshold = _ref.backgroundThreshold,
-      componentMap = _ref.componentMap;
-
-  var _useState = useState({
+const OverlayProvider = ({
+  children,
+  backgroundType,
+  backgroundThreshold,
+  componentMap
+}) => {
+  const [overlayState, setOverlayState] = useState({
     isActive: false
-  }),
-      overlayState = _useState[0],
-      setOverlayState = _useState[1];
+  });
 
-  var activate = function activate(_ref2) {
-    var component = _ref2.component;
-    return setOverlayState({
-      component: component,
-      isActive: true
-    });
-  };
+  const activate = ({
+    component
+  }) => setOverlayState({
+    component,
+    isActive: true
+  });
 
-  var deactivate = function deactivate() {
-    return setOverlayState({
-      isActive: false
-    });
-  };
+  const deactivate = () => setOverlayState({
+    isActive: false
+  });
 
-  var component = overlayState.component,
-      isActive = overlayState.isActive;
-  var Component = component && componentMap[component];
+  const {
+    component,
+    isActive
+  } = overlayState;
+  const Component = component && componentMap[component];
   return React.createElement(P, {
     value: {
-      isActive: isActive,
-      componentMap: componentMap,
-      backgroundType: backgroundType,
-      backgroundThreshold: backgroundThreshold,
-      activate: activate,
-      deactivate: deactivate
+      isActive,
+      componentMap,
+      backgroundType,
+      backgroundThreshold,
+      activate,
+      deactivate
     }
   }, React.createElement("div", {
     id: "hydra-overlay-wrapper"
@@ -216,142 +179,245 @@ var OverlayProvider = function OverlayProvider(_ref) {
   }, React.createElement(Component, null))));
 };
 
-var OverlayConsumer = C;
-var Overlay = {
+const OverlayConsumer = C;
+const Overlay = {
   Consumer: OverlayConsumer,
   Provider: OverlayProvider
 };
 
-var Close = function Close(props) {
-  return React.createElement(Button, Object.assign({}, props, {
-    style: _extends({
-      position: "relative",
-      fontSize: "32px",
-      width: "32px",
-      height: "32px",
-      lineHeight: "32px",
-      background: "none",
-      border: "none",
-      outlineOffset: "-6px",
-      cursor: "pointer",
-      padding: "unset"
-    }, props.style),
-    onClick: function onClick() {
-      return props.onClick();
-    }
-  }), React.createElement("div", {
+const Close = props => React.createElement(Button, Object.assign({}, props, {
+  style: {
+    position: "relative",
+    fontSize: "32px",
+    width: "32px",
+    height: "32px",
+    lineHeight: "32px",
+    background: "none",
+    border: "none",
+    outlineOffset: "-6px",
+    cursor: "pointer",
+    padding: "unset",
+    ...props.style
+  },
+  onClick: () => props.onClick()
+}), React.createElement("div", {
+  style: {
+    position: "absolute",
+    width: "32px",
+    height: "32px",
+    transform: "rotate(45deg)",
+    borderRadius: "32px",
+    top: "0px"
+  }
+}, "+"));
+const Header = ({
+  id,
+  headerText,
+  onClick,
+  style
+}) => React.createElement("div", {
+  id: id,
+  style: {
+    minHeight: "32px",
+    position: "relative",
+    ...style
+  }
+}, headerText && React.createElement("h3", {
+  style: {
+    margin: "unset",
+    lineHeight: "32px"
+  }
+}, headerText), React.createElement(Close, {
+  onClick: () => onClick(),
+  style: {
+    position: "absolute",
+    top: "0px",
+    right: "0px"
+  },
+  autoFocus: true
+}));
+const Body = ({
+  children,
+  id,
+  style
+}) => React.createElement("div", {
+  id: id,
+  style: {
+    flex: 1,
+    paddingTop: "16px",
+    paddingBottom: "24px",
+    ...style
+  }
+}, children);
+const Footer = props => React.createElement(ButtonRow, Object.assign({}, props));
+
+const ModalHeader = ({
+  closeModal,
+  ...rest
+}) => React.createElement(Header, Object.assign({
+  id: "hydra-modal-header",
+  onClick: () => closeModal()
+}, rest));
+const ModalBody = props => React.createElement(Body, Object.assign({
+  id: "hydra-modal-body"
+}, props));
+const ModalFooter = ({
+  closeModal,
+  style
+}) => React.createElement(Footer, {
+  id: "hydra-modal-footer",
+  position: "right",
+  style: style
+}, React.createElement(Button, {
+  onClick: () => closeModal()
+}, "close"));
+const ModalContainer = ({
+  children,
+  deactivate,
+  headerText,
+  styleOverrides,
+  width: _width = 600,
+  height: _height = 550,
+  withHeader: _withHeader = true,
+  Header: _Header = ModalHeader,
+  Body: _Body = ModalBody,
+  withFooter: _withFooter = true,
+  Footer: _Footer = ModalFooter
+}) => React.createElement("div", {
+  id: "hydra-overlay-modal",
+  style: {
+    width: `${_width}px`,
+    height: `${_height}px`,
+    backgroundColor: "#fff",
+    borderRadius: "2px",
+    boxShadow: `0px 0px 8px 4px ${COLOR.GRAY[300]}`,
+    position: "absolute",
+    left: "50%",
+    marginLeft: `-${Math.floor(_width / 2)}px`,
+    top: "16%",
+    display: "flex",
+    flexDirection: "column",
+    boxSizing: "border-box",
+    padding: "14px 16px 24px 16px",
+    ...(styleOverrides === null || styleOverrides === void 0 ? void 0 : styleOverrides.container)
+  }
+}, _withHeader && React.createElement(_Header, {
+  closeModal: deactivate,
+  headerText: headerText,
+  style: styleOverrides === null || styleOverrides === void 0 ? void 0 : styleOverrides.header
+}), React.createElement(_Body, {
+  style: styleOverrides === null || styleOverrides === void 0 ? void 0 : styleOverrides.body
+}, children), _withFooter && React.createElement(_Footer, {
+  closeModal: deactivate,
+  style: styleOverrides === null || styleOverrides === void 0 ? void 0 : styleOverrides.footer
+}));
+const Modal = props => React.createElement(Overlay.Consumer, null, context => {
+  if (!context) return null;
+  const {
+    Container = ModalContainer
+  } = props;
+  return React.createElement(Container, Object.assign({}, props, context));
+});
+
+let _ = t => t,
+    _t2;
+const slideLeft = translateX => keyframes(_t2 || (_t2 = _`
+  to { 
+    transform: translateX(${0}px);
+  }
+`), translateX);
+
+let _$1 = t => t,
+    _t,
+    _t2$1,
+    _t3;
+const PanelHeader = ({
+  closePanel,
+  ...rest
+}) => React.createElement(Header, Object.assign({
+  id: "hydra-panel-header",
+  onClick: () => closePanel()
+}, rest));
+const PanelFooter = ({
+  closePanel,
+  style
+}) => React.createElement(Footer, {
+  id: "hydra-panel-footer",
+  position: "right",
+  style: style
+}, React.createElement(Button, {
+  onClick: () => closePanel()
+}, "Close"));
+const PanelBody = props => React.createElement(Body, Object.assign({
+  id: "hydra-panel-body"
+}, props));
+
+const slideInMixin = () => css(_t || (_t = _$1`
+  right: -600px;
+  animation: ${0} 250ms ease-out forwards;
+`), slideLeft(-600));
+
+const slideOutMixin = () => css(_t2$1 || (_t2$1 = _$1`
+  right: 0px;
+  animation: ${0} 250ms ease-out forwards;
+`), slideLeft(600));
+
+const PanelWrapper = styled.div(_t3 || (_t3 = _$1`
+  ${0}
+`), props => props.isOpen ? slideInMixin : slideOutMixin);
+const PanelContainer = ({
+  children,
+  styleOverrides,
+  width: _width = "600px",
+  height: _height = "100%",
+  withHeader: _withHeader = true,
+  headerText,
+  Header: _Header = PanelHeader,
+  Body: _Body = PanelBody,
+  withFooter: _withFooter = true,
+  Footer: _Footer = PanelFooter,
+  deactivate
+}) => {
+  const [isOpen, setIsOpen] = useState(true);
+  return React.createElement(PanelWrapper, {
+    id: "hydra-overlay-panel",
+    isOpen: isOpen,
     style: {
-      position: "absolute",
-      width: "32px",
-      height: "32px",
-      transform: "rotate(45deg)",
-      borderRadius: "32px",
-      top: "0px"
-    }
-  }, "+"));
-};
-var ModalHeader = function ModalHeader(_ref) {
-  var headerText = _ref.headerText,
-      closeModal = _ref.closeModal,
-      style = _ref.style;
-  return React.createElement("div", {
-    id: "hydra-modal-header",
-    style: _extends({
-      minHeight: "32px",
-      position: "relative"
-    }, style)
-  }, headerText && React.createElement("h3", {
-    style: {
-      margin: "unset",
-      lineHeight: "32px"
-    }
-  }, headerText), React.createElement(Close, {
-    onClick: function onClick() {
-      return closeModal();
-    },
-    style: {
-      position: "absolute",
+      width: _width,
+      height: _height,
+      position: "fixed",
       top: "0px",
-      right: "0px"
-    },
-    autoFocus: true
-  }));
-};
-var ModalBody = function ModalBody(_ref2) {
-  var children = _ref2.children,
-      style = _ref2.style;
-  return React.createElement("div", {
-    id: "hydra-modal-body",
-    style: _extends({
-      flex: 1,
-      paddingTop: "16px",
-      paddingBottom: "24px"
-    }, style)
-  }, children);
-};
-var ModalFooter = function ModalFooter(_ref3) {
-  var closeModal = _ref3.closeModal;
-  return React.createElement(ButtonRow, {
-    position: "right"
-  }, React.createElement(Button, {
-    onClick: function onClick() {
-      return closeModal();
-    }
-  }, "close"));
-};
-var ModalContainer = function ModalContainer(_ref4) {
-  var children = _ref4.children,
-      deactivate = _ref4.deactivate,
-      headerText = _ref4.headerText,
-      styleOverrides = _ref4.styleOverrides,
-      _ref4$width = _ref4.width,
-      width = _ref4$width === void 0 ? 600 : _ref4$width,
-      _ref4$height = _ref4.height,
-      height = _ref4$height === void 0 ? 550 : _ref4$height,
-      _ref4$withHeader = _ref4.withHeader,
-      withHeader = _ref4$withHeader === void 0 ? true : _ref4$withHeader,
-      _ref4$Header = _ref4.Header,
-      Header = _ref4$Header === void 0 ? ModalHeader : _ref4$Header,
-      _ref4$Body = _ref4.Body,
-      Body = _ref4$Body === void 0 ? ModalBody : _ref4$Body,
-      _ref4$withFooter = _ref4.withFooter,
-      withFooter = _ref4$withFooter === void 0 ? true : _ref4$withFooter,
-      _ref4$Footer = _ref4.Footer,
-      Footer = _ref4$Footer === void 0 ? ModalFooter : _ref4$Footer;
-  return React.createElement("div", {
-    id: "hydra-overlay-modal",
-    style: _extends({
-      width: width + "px",
-      height: height + "px",
       backgroundColor: "#fff",
-      borderRadius: "2px",
-      boxShadow: "0px 0px 8px 4px " + COLOR.GRAY[300],
-      position: "absolute",
-      left: "50%",
-      marginLeft: "-" + Math.floor(width / 2) + "px",
-      top: "16%",
       display: "flex",
       flexDirection: "column",
       boxSizing: "border-box",
-      padding: "14px 16px 24px 16px"
-    }, styleOverrides === null || styleOverrides === void 0 ? void 0 : styleOverrides.container)
-  }, withHeader && React.createElement(Header, {
-    closeModal: deactivate,
-    headerText: headerText
-  }), React.createElement(Body, {
+      padding: "14px 16px 24px 16px",
+      overflow: "auto",
+      wordBreak: "break-word",
+      ...(styleOverrides === null || styleOverrides === void 0 ? void 0 : styleOverrides.container)
+    }
+  }, _withHeader && React.createElement(_Header, {
+    headerText: headerText,
+    style: styleOverrides === null || styleOverrides === void 0 ? void 0 : styleOverrides.header,
+    closePanel: () => deactivate()
+  }), React.createElement(_Body, {
     style: styleOverrides === null || styleOverrides === void 0 ? void 0 : styleOverrides.body
-  }, children), withFooter && React.createElement(Footer, {
-    closeModal: deactivate
+  }, children), _withFooter && React.createElement(_Footer, {
+    closePanel: () => {
+      setIsOpen(false);
+      setTimeout(() => deactivate(), 250);
+    },
+    style: styleOverrides === null || styleOverrides === void 0 ? void 0 : styleOverrides.footer
   }));
 };
-var Modal = function Modal(props) {
-  return React.createElement(Overlay.Consumer, null, function (context) {
-    if (!context) return null;
-    var _props$Container = props.Container,
-        Container = _props$Container === void 0 ? ModalContainer : _props$Container;
-    return React.createElement(Container, Object.assign({}, props, context));
-  });
-};
+const Panel = props => React.createElement(Overlay.Consumer, null, context => {
+  if (!context) return null;
+  const {
+    Container = PanelContainer,
+    ...rest
+  } = props;
+  return React.createElement(Container, Object.assign({}, rest, context));
+});
 
-export { Alert, BACKGROUND_TYPE, Background, BlurryBackground, Button, ButtonRow, Close, DarkBackground, Modal, ModalBody, ModalContainer, ModalFooter, ModalHeader, NoBackground, Overlay };
+export { Alert, BACKGROUND_TYPE, Background, BlurryBackground, Button, ButtonRow, DarkBackground, Modal, ModalBody, ModalContainer, ModalFooter, ModalHeader, NoBackground, Overlay, Panel, PanelBody, PanelContainer, PanelFooter, PanelHeader };
 //# sourceMappingURL=index.modern.js.map

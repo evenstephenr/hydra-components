@@ -1,16 +1,19 @@
 import React, { FC } from "react";
 
 /** This is a generic Button component meant to be extended with any functionality you want */
-export const Button: FC<ReactButton> = (props) => {
-  const { children, ...rest } = props;
-  return <button {...rest}>{children}</button>;
-};
+export const Button: FC<ReactButton> = (props) => <button {...props} />;
 
-type ButtonRowProps = {
+export type ButtonRowProps = {
+  id?: string;
   position: "left" | "right";
 } & StyleOverride;
 export const ButtonRow: FC<ButtonRowProps> = ({
-  children,
   position = "right",
+  id,
+  children,
   style,
-}) => <div style={{ textAlign: position, ...style }}>{children}</div>;
+}) => (
+  <div id={id} style={{ textAlign: position, ...style }}>
+    {children}
+  </div>
+);
