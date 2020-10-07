@@ -1,5 +1,5 @@
 import React from "react";
-import { Overlay, Modal, Panel } from "components";
+import { Overlay, Modal, Panel, Alerts } from "components";
 import "./App.css";
 
 const SampleCustom = () => {
@@ -20,15 +20,43 @@ const Activator = () => (
       if (!context) return null;
       return (
         <>
-          <button onClick={() => context.activate({ component: "DEFAULT" })}>
-            activate custom
-          </button>
-          <button onClick={() => context.activate({ component: "MODAL" })}>
-            activate Modal
-          </button>
-          <button onClick={() => context.activate({ component: "PANEL" })}>
-            activate Panel
-          </button>
+          <div>
+            <button onClick={() => context.activate({ component: "DEFAULT" })}>
+              activate custom
+            </button>
+            <button onClick={() => context.activate({ component: "MODAL" })}>
+              activate Modal
+            </button>
+            <button onClick={() => context.activate({ component: "PANEL" })}>
+              activate Panel
+            </button>
+          </div>
+          <div>
+            <Alerts.Consumer>
+              {({ activate }) => (
+                <>
+                  <button
+                    onClick={() =>
+                      activate({
+                        message: "oh no",
+                      })
+                    }
+                  >
+                    activate alert
+                  </button>
+                  <button
+                    onClick={() =>
+                      activate({
+                        message: "Sup",
+                      })
+                    }
+                  >
+                    activate alert
+                  </button>
+                </>
+              )}
+            </Alerts.Consumer>
+          </div>
         </>
       );
     }}
@@ -71,16 +99,18 @@ const componentMap = {
 
 export const App = () => (
   <Overlay.Provider componentMap={componentMap}>
-    <div
-      style={{
-        width: "100vw",
-        height: "100vh",
-        backgroundColor: "#fff",
-      }}
-    >
-      <div>heyo</div>
-      <Activator />
-      <SampleCustom />
-    </div>
+    <Alerts.Provider duration={5000}>
+      <div
+        style={{
+          width: "100vw",
+          height: "100vh",
+          backgroundColor: "#fff",
+        }}
+      >
+        <div>heyo</div>
+        <Activator />
+        <SampleCustom />
+      </div>
+    </Alerts.Provider>
   </Overlay.Provider>
 );

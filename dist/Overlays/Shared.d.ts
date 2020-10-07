@@ -1,10 +1,5 @@
 import React from "react";
 import { ButtonRowProps } from "../Button";
-declare type CloseProps = {
-    onClick: () => void;
-} & ReactButton;
-/** This is a super-specific close button that's got terrible CSS but look ma, no SVG's! */
-export declare const Close: React.FC<CloseProps>;
 declare type SharedComponentProps = {
     id: string;
 };

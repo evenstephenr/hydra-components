@@ -1,13 +1,6 @@
 import React, { useEffect, createContext, useState } from 'react';
 import styled, { keyframes, css } from 'styled-components';
 
-function Alert(props) {
-  const {
-    message
-  } = props;
-  return alert(message);
-}
-
 const Button = props => React.createElement("button", Object.assign({}, props));
 const ButtonRow = ({
   position: _position = "right",
@@ -21,6 +14,175 @@ const ButtonRow = ({
     ...style
   }
 }, children);
+const Close = props => React.createElement(Button, Object.assign({}, props, {
+  style: {
+    position: "relative",
+    fontSize: "32px",
+    width: "32px",
+    height: "32px",
+    lineHeight: "32px",
+    background: "none",
+    border: "none",
+    outlineOffset: "-6px",
+    cursor: "pointer",
+    padding: "unset",
+    ...props.style
+  },
+  onClick: () => props.onClick()
+}), React.createElement("div", {
+  style: {
+    position: "absolute",
+    width: "32px",
+    height: "32px",
+    transform: "rotate(45deg)",
+    borderRadius: "32px",
+    top: "0px"
+  }
+}, "+"));
+
+const Alert = ({
+  children,
+  id,
+  dismiss,
+  style
+}) => React.createElement("div", {
+  id: `hydra-alert-${id}`,
+  style: {
+    position: "relative",
+    boxShadow: "rgba(0, 0, 0, 0.23) 0px 1px 6px 2px",
+    width: "350px",
+    padding: "20px",
+    paddingRight: "38px",
+    marginBottom: "20px",
+    ...style
+  }
+}, children, React.createElement(Close, {
+  onClick: () => dismiss(),
+  style: {
+    position: "absolute",
+    top: "13px",
+    right: "7px",
+    opacity: "0.4"
+  }
+}));
+
+const randomString = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+
+const {
+  Consumer: C,
+  Provider: P
+} = React.createContext(null);
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "ADD":
+      {
+        const {
+          alertId,
+          message,
+          style
+        } = action;
+        return { ...state,
+          [alertId]: {
+            message,
+            style
+          }
+        };
+      }
+
+    case "REMOVE":
+      {
+        const {
+          alertId
+        } = action;
+        const mutatedState = { ...state
+        };
+        delete mutatedState[alertId];
+        return mutatedState;
+      }
+
+    default:
+      return state;
+  }
+};
+
+const AlertProvider = ({
+  children,
+  duration: _duration = 10000,
+  position
+}) => {
+  const [state, dispatch] = React.useReducer(reducer, {});
+
+  const activate = o => {
+    const {
+      message,
+      duration: d,
+      style
+    } = o;
+    const alertId = randomString();
+    const newAlertDuration = d || _duration;
+    setTimeout(() => dispatch({
+      type: "REMOVE",
+      alertId
+    }), newAlertDuration);
+    dispatch({
+      type: "ADD",
+      message,
+      style,
+      alertId
+    });
+  };
+
+  function generateStyles(position) {
+    switch (position) {
+      case "BOTTOM_LEFT":
+        return {
+          left: "0px",
+          bottom: "0px"
+        };
+
+      case "TOP":
+      default:
+        return {
+          top: "0px",
+          left: "calc(50% - 194px)"
+        };
+    }
+  }
+
+  return React.createElement(P, {
+    value: {
+      isActive: false,
+      activate
+    }
+  }, React.createElement("div", null, children), React.createElement("div", {
+    id: "hydra-alert-drawer",
+    style: {
+      position: "fixed",
+      margin: "20px",
+      ...generateStyles(position)
+    }
+  }, Object.keys(state).map(alertKey => {
+    const {
+      message,
+      style
+    } = state[alertKey];
+    return React.createElement(Alert, {
+      key: alertKey,
+      id: alertKey,
+      dismiss: () => dispatch({
+        type: "REMOVE",
+        alertId: alertKey
+      }),
+      style: style
+    }, message);
+  })));
+};
+
+const Alerts = {
+  Consumer: C,
+  Provider: AlertProvider
+};
 
 const COLOR = {
   GRAY: {
@@ -57,14 +219,6 @@ const COLOR = {
     return `${r}, ${g}, ${b}`;
   }
 };
-
-var BACKGROUND_TYPE;
-
-(function (BACKGROUND_TYPE) {
-  BACKGROUND_TYPE["NONE"] = "NONE";
-  BACKGROUND_TYPE["DARKEN"] = "DARKEN";
-  BACKGROUND_TYPE["BLUR"] = "BLUR";
-})(BACKGROUND_TYPE || (BACKGROUND_TYPE = {}));
 
 const NoBackground = ({
   children
@@ -107,13 +261,13 @@ const BlurryBackground = ({
 };
 const Background = props => {
   switch (props.backgroundType) {
-    case BACKGROUND_TYPE.DARKEN:
+    case "DARKEN":
       return React.createElement(DarkBackground, Object.assign({}, props));
 
-    case BACKGROUND_TYPE.BLUR:
+    case "BLUR":
       return React.createElement(BlurryBackground, Object.assign({}, props));
 
-    case BACKGROUND_TYPE.NONE:
+    case "NONE":
       return React.createElement(NoBackground, Object.assign({}, props));
 
     default:
@@ -122,8 +276,8 @@ const Background = props => {
 };
 
 const {
-  Consumer: C,
-  Provider: P
+  Consumer: C$1,
+  Provider: P$1
 } = createContext(null);
 
 const OverlayProvider = ({
@@ -152,7 +306,7 @@ const OverlayProvider = ({
     isActive
   } = overlayState;
   const Component = component && componentMap[component];
-  return React.createElement(P, {
+  return React.createElement(P$1, {
     value: {
       isActive,
       componentMap,
@@ -179,37 +333,12 @@ const OverlayProvider = ({
   }, React.createElement(Component, null))));
 };
 
-const OverlayConsumer = C;
+const OverlayConsumer = C$1;
 const Overlay = {
   Consumer: OverlayConsumer,
   Provider: OverlayProvider
 };
 
-const Close = props => React.createElement(Button, Object.assign({}, props, {
-  style: {
-    position: "relative",
-    fontSize: "32px",
-    width: "32px",
-    height: "32px",
-    lineHeight: "32px",
-    background: "none",
-    border: "none",
-    outlineOffset: "-6px",
-    cursor: "pointer",
-    padding: "unset",
-    ...props.style
-  },
-  onClick: () => props.onClick()
-}), React.createElement("div", {
-  style: {
-    position: "absolute",
-    width: "32px",
-    height: "32px",
-    transform: "rotate(45deg)",
-    borderRadius: "32px",
-    top: "0px"
-  }
-}, "+"));
 const Header = ({
   id,
   headerText,
@@ -419,5 +548,5 @@ const Panel = props => React.createElement(Overlay.Consumer, null, context => {
   return React.createElement(Container, Object.assign({}, rest, context));
 });
 
-export { Alert, BACKGROUND_TYPE, Background, BlurryBackground, Button, ButtonRow, DarkBackground, Modal, ModalBody, ModalContainer, ModalFooter, ModalHeader, NoBackground, Overlay, Panel, PanelBody, PanelContainer, PanelFooter, PanelHeader };
+export { Alert, Alerts, Background, BlurryBackground, Button, ButtonRow, Close, DarkBackground, Modal, ModalBody, ModalContainer, ModalFooter, ModalHeader, NoBackground, Overlay, Panel, PanelBody, PanelContainer, PanelFooter, PanelHeader };
 //# sourceMappingURL=index.modern.js.map

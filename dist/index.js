@@ -5,11 +5,6 @@ var React__default = _interopDefault(React);
 var styled = require('styled-components');
 var styled__default = _interopDefault(styled);
 
-function Alert(props) {
-  var message = props.message;
-  return alert(message);
-}
-
 function _extends() {
   _extends = Object.assign || function (target) {
     for (var i = 1; i < arguments.length; i++) {
@@ -68,6 +63,181 @@ var ButtonRow = function ButtonRow(_ref) {
     }, style)
   }, children);
 };
+var Close = function Close(props) {
+  return React__default.createElement(Button, Object.assign({}, props, {
+    style: _extends({
+      position: "relative",
+      fontSize: "32px",
+      width: "32px",
+      height: "32px",
+      lineHeight: "32px",
+      background: "none",
+      border: "none",
+      outlineOffset: "-6px",
+      cursor: "pointer",
+      padding: "unset"
+    }, props.style),
+    onClick: function onClick() {
+      return props.onClick();
+    }
+  }), React__default.createElement("div", {
+    style: {
+      position: "absolute",
+      width: "32px",
+      height: "32px",
+      transform: "rotate(45deg)",
+      borderRadius: "32px",
+      top: "0px"
+    }
+  }, "+"));
+};
+
+var Alert = function Alert(_ref) {
+  var children = _ref.children,
+      id = _ref.id,
+      dismiss = _ref.dismiss,
+      style = _ref.style;
+  return React__default.createElement("div", {
+    id: "hydra-alert-" + id,
+    style: _extends({
+      position: "relative",
+      boxShadow: "rgba(0, 0, 0, 0.23) 0px 1px 6px 2px",
+      width: "350px",
+      padding: "20px",
+      paddingRight: "38px",
+      marginBottom: "20px"
+    }, style)
+  }, children, React__default.createElement(Close, {
+    onClick: function onClick() {
+      return dismiss();
+    },
+    style: {
+      position: "absolute",
+      top: "13px",
+      right: "7px",
+      opacity: "0.4"
+    }
+  }));
+};
+
+var randomString = function randomString() {
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+};
+
+var _React$createContext = React__default.createContext(null),
+    C = _React$createContext.Consumer,
+    P = _React$createContext.Provider;
+
+var reducer = function reducer(state, action) {
+  switch (action.type) {
+    case "ADD":
+      {
+        var _extends2;
+
+        var alertId = action.alertId,
+            message = action.message,
+            style = action.style;
+        return _extends({}, state, (_extends2 = {}, _extends2[alertId] = {
+          message: message,
+          style: style
+        }, _extends2));
+      }
+
+    case "REMOVE":
+      {
+        var _alertId = action.alertId;
+
+        var mutatedState = _extends({}, state);
+
+        delete mutatedState[_alertId];
+        return mutatedState;
+      }
+
+    default:
+      return state;
+  }
+};
+
+var AlertProvider = function AlertProvider(_ref2) {
+  var children = _ref2.children,
+      _ref2$duration = _ref2.duration,
+      duration = _ref2$duration === void 0 ? 10000 : _ref2$duration,
+      position = _ref2.position;
+
+  var _React$useReducer = React__default.useReducer(reducer, {}),
+      state = _React$useReducer[0],
+      dispatch = _React$useReducer[1];
+
+  var activate = function activate(o) {
+    var message = o.message,
+        d = o.duration,
+        style = o.style;
+    var alertId = randomString();
+    var newAlertDuration = d || duration;
+    setTimeout(function () {
+      return dispatch({
+        type: "REMOVE",
+        alertId: alertId
+      });
+    }, newAlertDuration);
+    dispatch({
+      type: "ADD",
+      message: message,
+      style: style,
+      alertId: alertId
+    });
+  };
+
+  function generateStyles(position) {
+    switch (position) {
+      case "BOTTOM_LEFT":
+        return {
+          left: "0px",
+          bottom: "0px"
+        };
+
+      case "TOP":
+      default:
+        return {
+          top: "0px",
+          left: "calc(50% - 194px)"
+        };
+    }
+  }
+
+  return React__default.createElement(P, {
+    value: {
+      isActive: false,
+      activate: activate
+    }
+  }, React__default.createElement("div", null, children), React__default.createElement("div", {
+    id: "hydra-alert-drawer",
+    style: _extends({
+      position: "fixed",
+      margin: "20px"
+    }, generateStyles(position))
+  }, Object.keys(state).map(function (alertKey) {
+    var _state$alertKey = state[alertKey],
+        message = _state$alertKey.message,
+        style = _state$alertKey.style;
+    return React__default.createElement(Alert, {
+      key: alertKey,
+      id: alertKey,
+      dismiss: function dismiss() {
+        return dispatch({
+          type: "REMOVE",
+          alertId: alertKey
+        });
+      },
+      style: style
+    }, message);
+  })));
+};
+
+var Alerts = {
+  Consumer: C,
+  Provider: AlertProvider
+};
 
 var COLOR = {
   GRAY: {
@@ -102,12 +272,6 @@ var COLOR = {
     return r + ", " + g + ", " + b;
   }
 };
-
-(function (BACKGROUND_TYPE) {
-  BACKGROUND_TYPE["NONE"] = "NONE";
-  BACKGROUND_TYPE["DARKEN"] = "DARKEN";
-  BACKGROUND_TYPE["BLUR"] = "BLUR";
-})(exports.BACKGROUND_TYPE || (exports.BACKGROUND_TYPE = {}));
 
 var NoBackground = function NoBackground(_ref) {
   var children = _ref.children;
@@ -153,13 +317,13 @@ var BlurryBackground = function BlurryBackground(_ref3) {
 };
 var Background = function Background(props) {
   switch (props.backgroundType) {
-    case exports.BACKGROUND_TYPE.DARKEN:
+    case "DARKEN":
       return React__default.createElement(DarkBackground, Object.assign({}, props));
 
-    case exports.BACKGROUND_TYPE.BLUR:
+    case "BLUR":
       return React__default.createElement(BlurryBackground, Object.assign({}, props));
 
-    case exports.BACKGROUND_TYPE.NONE:
+    case "NONE":
       return React__default.createElement(NoBackground, Object.assign({}, props));
 
     default:
@@ -168,8 +332,8 @@ var Background = function Background(props) {
 };
 
 var _createContext = React.createContext(null),
-    C = _createContext.Consumer,
-    P = _createContext.Provider;
+    C$1 = _createContext.Consumer,
+    P$1 = _createContext.Provider;
 
 var OverlayProvider = function OverlayProvider(_ref) {
   var children = _ref.children,
@@ -200,7 +364,7 @@ var OverlayProvider = function OverlayProvider(_ref) {
   var component = overlayState.component,
       isActive = overlayState.isActive;
   var Component = component && componentMap[component];
-  return React__default.createElement(P, {
+  return React__default.createElement(P$1, {
     value: {
       isActive: isActive,
       componentMap: componentMap,
@@ -227,40 +391,12 @@ var OverlayProvider = function OverlayProvider(_ref) {
   }, React__default.createElement(Component, null))));
 };
 
-var OverlayConsumer = C;
+var OverlayConsumer = C$1;
 var Overlay = {
   Consumer: OverlayConsumer,
   Provider: OverlayProvider
 };
 
-var Close = function Close(props) {
-  return React__default.createElement(Button, Object.assign({}, props, {
-    style: _extends({
-      position: "relative",
-      fontSize: "32px",
-      width: "32px",
-      height: "32px",
-      lineHeight: "32px",
-      background: "none",
-      border: "none",
-      outlineOffset: "-6px",
-      cursor: "pointer",
-      padding: "unset"
-    }, props.style),
-    onClick: function onClick() {
-      return props.onClick();
-    }
-  }), React__default.createElement("div", {
-    style: {
-      position: "absolute",
-      width: "32px",
-      height: "32px",
-      transform: "rotate(45deg)",
-      borderRadius: "32px",
-      top: "0px"
-    }
-  }, "+"));
-};
 var Header = function Header(_ref) {
   var id = _ref.id,
       headerText = _ref.headerText,
@@ -545,10 +681,12 @@ var Panel = function Panel(props) {
 };
 
 exports.Alert = Alert;
+exports.Alerts = Alerts;
 exports.Background = Background;
 exports.BlurryBackground = BlurryBackground;
 exports.Button = Button;
 exports.ButtonRow = ButtonRow;
+exports.Close = Close;
 exports.DarkBackground = DarkBackground;
 exports.Modal = Modal;
 exports.ModalBody = ModalBody;

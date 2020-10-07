@@ -1,15 +1,9 @@
 import React, { FC, useEffect } from "react";
 import { COLOR } from "../Theme";
 
-export enum BACKGROUND_TYPE {
-  NONE = "NONE",
-  DARKEN = "DARKEN",
-  BLUR = "BLUR",
-}
-
 export type BackgroundProps = {
   backgroundThreshold?: number; // the 'magnitude' of backgroundType
-  backgroundType?: BACKGROUND_TYPE; // none, background with opacity, filter:blur
+  backgroundType?: "NONE" | "DARKEN" | "BLUR"; // none, background with opacity, filter:blur
 };
 
 export const NoBackground: FC = ({ children }) => (
@@ -68,11 +62,11 @@ export const BlurryBackground: FC<BackgroundProps> = ({
 };
 export const Background: FC<BackgroundProps> = (props) => {
   switch (props.backgroundType) {
-    case BACKGROUND_TYPE.DARKEN:
+    case "DARKEN":
       return <DarkBackground {...props} />;
-    case BACKGROUND_TYPE.BLUR:
+    case "BLUR":
       return <BlurryBackground {...props} />;
-    case BACKGROUND_TYPE.NONE:
+    case "NONE":
       return <NoBackground {...props} />;
     default:
       return <DarkBackground {...props} />;
