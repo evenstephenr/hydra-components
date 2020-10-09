@@ -13,6 +13,7 @@ export declare type AlertContext = {
     isActive: boolean;
     /** renders the alert to be shown, given provided opts */
     activate: (o: ActivateOptions) => void;
+    position: AlertPosition;
 };
 declare type AlertPosition = "TOP" | "BOTTOM_LEFT";
 declare type AlertProviderProps = {

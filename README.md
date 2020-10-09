@@ -1,6 +1,8 @@
 # Hydra Component library
 
-`hydra-components` is a React component library, inspired by the architecture behind [create-react-library](https://www.npmjs.com/package/create-react-library).
+`hydra-components` is a semi-headless React component library that gives you a working API for creating Modals, Panels, and Toasts in your application!
+
+This project was inspired by the architecture behind [create-react-library](https://www.npmjs.com/package/create-react-library).
 
 There are three very important modules in this project
 

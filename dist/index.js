@@ -47,6 +47,40 @@ function _taggedTemplateLiteralLoose(strings, raw) {
   return strings;
 }
 
+var COLOR = {
+  GRAY: {
+    100: "#ffffff",
+    200: "#f1f2f6",
+    300: "#dfe4ea",
+    400: "#ced6e0",
+    500: "#a4b0be",
+    600: "#747d8c",
+    700: "#57606f",
+    800: "#2f3542"
+  },
+  hexToRgb: function hexToRgb(hex) {
+    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+      return r + r + g + g + b + b;
+    });
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : null;
+  },
+  asRGB: function asRGB(color, id) {
+    var hex = COLOR[color][id];
+    var result = COLOR.hexToRgb(hex);
+    if (!result) throw new Error("reference error, bad COLOR");
+    var r = result.r,
+        g = result.g,
+        b = result.b;
+    return r + ", " + g + ", " + b;
+  }
+};
+
 var Button = function Button(props) {
   return React__default.createElement("button", Object.assign({}, props));
 };
@@ -97,27 +131,47 @@ var Alert = function Alert(_ref) {
       id = _ref.id,
       dismiss = _ref.dismiss,
       style = _ref.style;
-  return React__default.createElement("div", {
-    id: "hydra-alert-" + id,
-    style: _extends({
-      position: "relative",
-      boxShadow: "rgba(0, 0, 0, 0.23) 0px 1px 6px 2px",
-      width: "350px",
-      padding: "20px",
-      paddingRight: "38px",
-      marginBottom: "20px"
-    }, style)
-  }, children, React__default.createElement(Close, {
-    onClick: function onClick() {
-      return dismiss();
-    },
-    style: {
-      position: "absolute",
-      top: "13px",
-      right: "7px",
-      opacity: "0.4"
+  return React__default.createElement(C, null, function (context) {
+    if (!context) return null;
+    var position = context.position;
+
+    function generateStyles(p) {
+      switch (p) {
+        case "BOTTOM_LEFT":
+          return {
+            marginTop: "20px"
+          };
+
+        case "TOP":
+        default:
+          return {
+            marginBottom: "20px"
+          };
+      }
     }
-  }));
+
+    return React__default.createElement("div", {
+      id: "hydra-alert-" + id,
+      style: _extends({
+        position: "relative",
+        boxShadow: "0px 0px 4px 4px " + COLOR.GRAY[300],
+        backgroundColor: "" + COLOR.GRAY[100],
+        width: "350px",
+        padding: "20px",
+        paddingRight: "38px"
+      }, generateStyles(position), style)
+    }, children, React__default.createElement(Close, {
+      onClick: function onClick() {
+        return dismiss();
+      },
+      style: {
+        position: "absolute",
+        top: "13px",
+        right: "7px",
+        opacity: "0.4"
+      }
+    }));
+  });
 };
 
 var randomString = function randomString() {
@@ -162,7 +216,8 @@ var AlertProvider = function AlertProvider(_ref2) {
   var children = _ref2.children,
       _ref2$duration = _ref2.duration,
       duration = _ref2$duration === void 0 ? 10000 : _ref2$duration,
-      position = _ref2.position;
+      _ref2$position = _ref2.position,
+      position = _ref2$position === void 0 ? "TOP" : _ref2$position;
 
   var _React$useReducer = React__default.useReducer(reducer, {}),
       state = _React$useReducer[0],
@@ -208,7 +263,8 @@ var AlertProvider = function AlertProvider(_ref2) {
   return React__default.createElement(P, {
     value: {
       isActive: false,
-      activate: activate
+      activate: activate,
+      position: position
     }
   }, React__default.createElement("div", null, children), React__default.createElement("div", {
     id: "hydra-alert-drawer",
@@ -237,40 +293,6 @@ var AlertProvider = function AlertProvider(_ref2) {
 var Alerts = {
   Consumer: C,
   Provider: AlertProvider
-};
-
-var COLOR = {
-  GRAY: {
-    100: "#ffffff",
-    200: "#f1f2f6",
-    300: "#dfe4ea",
-    400: "#ced6e0",
-    500: "#a4b0be",
-    600: "#747d8c",
-    700: "#57606f",
-    800: "#2f3542"
-  },
-  hexToRgb: function hexToRgb(hex) {
-    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-    hex = hex.replace(shorthandRegex, function (m, r, g, b) {
-      return r + r + g + g + b + b;
-    });
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16)
-    } : null;
-  },
-  asRGB: function asRGB(color, id) {
-    var hex = COLOR[color][id];
-    var result = COLOR.hexToRgb(hex);
-    if (!result) throw new Error("reference error, bad COLOR");
-    var r = result.r,
-        g = result.g,
-        b = result.b;
-    return r + ", " + g + ", " + b;
-  }
 };
 
 var NoBackground = function NoBackground(_ref) {
@@ -397,6 +419,30 @@ var Overlay = {
   Provider: OverlayProvider
 };
 
+function _templateObject2() {
+  var data = _taggedTemplateLiteralLoose(["\n  to { \n    transform: translateX(", "px);\n  }\n"]);
+
+  _templateObject2 = function _templateObject2() {
+    return data;
+  };
+
+  return data;
+}
+var slideLeft = function slideLeft(translateX) {
+  return styled.keyframes(_templateObject2(), translateX);
+};
+
+function _templateObject() {
+  var data = _taggedTemplateLiteralLoose(["\n  overflow: auto;\n  word-break: break-word;\n"]);
+
+  _templateObject = function _templateObject() {
+    return data;
+  };
+
+  return data;
+}
+var TextOverflow = styled__default.div(_templateObject());
+
 var Header = function Header(_ref) {
   var id = _ref.id,
       headerText = _ref.headerText,
@@ -406,7 +452,8 @@ var Header = function Header(_ref) {
     id: id,
     style: _extends({
       minHeight: "32px",
-      position: "relative"
+      position: "relative",
+      paddingBottom: "24px"
     }, style)
   }, headerText && React__default.createElement("h3", {
     style: {
@@ -429,17 +476,22 @@ var Body = function Body(_ref2) {
   var children = _ref2.children,
       id = _ref2.id,
       style = _ref2.style;
-  return React__default.createElement("div", {
+  return React__default.createElement(TextOverflow, {
     id: id,
     style: _extends({
-      flex: 1,
-      paddingTop: "16px",
-      paddingBottom: "24px"
+      flex: 1
     }, style)
   }, children);
 };
-var Footer = function Footer(props) {
-  return React__default.createElement(ButtonRow, Object.assign({}, props));
+var Footer = function Footer(_ref3) {
+  var style = _ref3.style,
+      rest = _objectWithoutPropertiesLoose(_ref3, ["style"]);
+
+  return React__default.createElement(ButtonRow, Object.assign({}, rest, {
+    style: _extends({
+      paddingTop: "24px"
+    }, style)
+  }));
 };
 
 var ModalHeader = function ModalHeader(_ref) {
@@ -453,11 +505,6 @@ var ModalHeader = function ModalHeader(_ref) {
     }
   }, rest));
 };
-var ModalBody = function ModalBody(props) {
-  return React__default.createElement(Body, Object.assign({
-    id: "hydra-modal-body"
-  }, props));
-};
 var ModalFooter = function ModalFooter(_ref2) {
   var closeModal = _ref2.closeModal,
       style = _ref2.style;
@@ -470,6 +517,11 @@ var ModalFooter = function ModalFooter(_ref2) {
       return closeModal();
     }
   }, "close"));
+};
+var ModalBody = function ModalBody(props) {
+  return React__default.createElement(Body, Object.assign({
+    id: "hydra-modal-body"
+  }, props));
 };
 var ModalContainer = function ModalContainer(_ref3) {
   var children = _ref3.children,
@@ -495,9 +547,9 @@ var ModalContainer = function ModalContainer(_ref3) {
     style: _extends({
       width: width + "px",
       height: height + "px",
-      backgroundColor: "#fff",
       borderRadius: "2px",
       boxShadow: "0px 0px 8px 4px " + COLOR.GRAY[300],
+      backgroundColor: "#fff",
       position: "absolute",
       left: "50%",
       marginLeft: "-" + Math.floor(width / 2) + "px",
@@ -527,19 +579,6 @@ var Modal = function Modal(props) {
   });
 };
 
-function _templateObject2() {
-  var data = _taggedTemplateLiteralLoose(["\n  to { \n    transform: translateX(", "px);\n  }\n"]);
-
-  _templateObject2 = function _templateObject2() {
-    return data;
-  };
-
-  return data;
-}
-var slideLeft = function slideLeft(translateX) {
-  return styled.keyframes(_templateObject2(), translateX);
-};
-
 function _templateObject3() {
   var data = _taggedTemplateLiteralLoose(["\n  ", "\n"]);
 
@@ -560,10 +599,10 @@ function _templateObject2$1() {
   return data;
 }
 
-function _templateObject() {
+function _templateObject$1() {
   var data = _taggedTemplateLiteralLoose(["\n  right: -600px;\n  animation: ", " 250ms ease-out forwards;\n"]);
 
-  _templateObject = function _templateObject() {
+  _templateObject$1 = function _templateObject() {
     return data;
   };
 
@@ -600,7 +639,7 @@ var PanelBody = function PanelBody(props) {
 };
 
 var slideInMixin = function slideInMixin() {
-  return styled.css(_templateObject(), slideLeft(-600));
+  return styled.css(_templateObject$1(), slideLeft(-600));
 };
 
 var slideOutMixin = function slideOutMixin() {
@@ -615,8 +654,6 @@ var PanelContainer = function PanelContainer(_ref3) {
       styleOverrides = _ref3.styleOverrides,
       _ref3$width = _ref3.width,
       width = _ref3$width === void 0 ? "600px" : _ref3$width,
-      _ref3$height = _ref3.height,
-      height = _ref3$height === void 0 ? "100%" : _ref3$height,
       _ref3$withHeader = _ref3.withHeader,
       withHeader = _ref3$withHeader === void 0 ? true : _ref3$withHeader,
       headerText = _ref3.headerText,
@@ -639,16 +676,15 @@ var PanelContainer = function PanelContainer(_ref3) {
     isOpen: isOpen,
     style: _extends({
       width: width,
-      height: height,
+      height: "100%",
       position: "fixed",
       top: "0px",
-      backgroundColor: "#fff",
+      backgroundColor: "" + COLOR.GRAY[100],
       display: "flex",
       flexDirection: "column",
       boxSizing: "border-box",
       padding: "14px 16px 24px 16px",
-      overflow: "auto",
-      wordBreak: "break-word"
+      boxShadow: "0px 0px 8px 4px " + COLOR.GRAY[300]
     }, styleOverrides === null || styleOverrides === void 0 ? void 0 : styleOverrides.container)
   }, withHeader && React__default.createElement(Header, {
     headerText: headerText,

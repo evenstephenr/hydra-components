@@ -78,9 +78,31 @@ const Default = () => (
   </Overlay.Consumer>
 );
 
+/** Hooking into Overlay.Consumer directly to build a custom Component for a Modal */
+const ModalFooter = ({ style, closeModal }) => (
+  <Overlay.Consumer>
+    {(context) => {
+      if (!context) return null;
+      return (
+        <div style={style}>
+          <button
+            onClick={() => {
+              alert("submit!");
+              context.deactivate();
+            }}
+          >
+            Submit
+          </button>
+          <button onClick={() => closeModal()}>Close</button>
+        </div>
+      );
+    }}
+  </Overlay.Consumer>
+);
+
 /** Using a stock Modal */
 const Message = () => (
-  <Modal headerText="This is a Modal">
+  <Modal headerText="This is a Modal" Footer={ModalFooter}>
     <div>hello hi hey</div>
   </Modal>
 );

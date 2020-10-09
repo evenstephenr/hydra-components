@@ -1,6 +1,7 @@
 import React, { FC, useState } from "react";
 import styled, { css } from "styled-components";
 import { Button } from "../Button";
+import { COLOR } from "../Theme";
 import { Overlay, OverlayContext } from "./Overlay";
 import { Header, Body, Footer } from "./Shared";
 import { slideLeft } from "../Styles";
@@ -31,7 +32,6 @@ type PanelProps = {
   Header?: FC<PanelHeaderProps>;
   headerText?: string;
   width?: string;
-  height?: string;
   withHeader?: boolean;
   Body?: FC;
   Footer?: FC<PanelFooterProps>;
@@ -65,7 +65,6 @@ export const PanelContainer: FC<PanelContainerProps> = ({
   children,
   styleOverrides,
   width = "600px",
-  height = "100%",
   withHeader = true,
   headerText,
   Header = PanelHeader,
@@ -81,16 +80,15 @@ export const PanelContainer: FC<PanelContainerProps> = ({
       isOpen={isOpen}
       style={{
         width,
-        height,
+        height: "100%",
         position: "fixed",
         top: "0px",
-        backgroundColor: "#fff",
+        backgroundColor: `${COLOR.GRAY[100]}`,
         display: "flex",
         flexDirection: "column",
         boxSizing: "border-box",
         padding: "14px 16px 24px 16px",
-        overflow: "auto",
-        wordBreak: "break-word",
+        boxShadow: `0px 0px 8px 4px ${COLOR.GRAY[300]}`,
         ...styleOverrides?.container,
       }}
     >

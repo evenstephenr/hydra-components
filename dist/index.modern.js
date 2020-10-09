@@ -1,6 +1,42 @@
 import React, { useEffect, createContext, useState } from 'react';
 import styled, { keyframes, css } from 'styled-components';
 
+const COLOR = {
+  GRAY: {
+    100: "#ffffff",
+    200: "#f1f2f6",
+    300: "#dfe4ea",
+    400: "#ced6e0",
+    500: "#a4b0be",
+    600: "#747d8c",
+    700: "#57606f",
+    800: "#2f3542"
+  },
+  hexToRgb: hex => {
+    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+      return r + r + g + g + b + b;
+    });
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : null;
+  },
+  asRGB: (color, id) => {
+    const hex = COLOR[color][id];
+    const result = COLOR.hexToRgb(hex);
+    if (!result) throw new Error("reference error, bad COLOR");
+    const {
+      r,
+      g,
+      b
+    } = result;
+    return `${r}, ${g}, ${b}`;
+  }
+};
+
 const Button = props => React.createElement("button", Object.assign({}, props));
 const ButtonRow = ({
   position: _position = "right",
@@ -45,26 +81,49 @@ const Alert = ({
   id,
   dismiss,
   style
-}) => React.createElement("div", {
-  id: `hydra-alert-${id}`,
-  style: {
-    position: "relative",
-    boxShadow: "rgba(0, 0, 0, 0.23) 0px 1px 6px 2px",
-    width: "350px",
-    padding: "20px",
-    paddingRight: "38px",
-    marginBottom: "20px",
-    ...style
+}) => React.createElement(C, null, context => {
+  if (!context) return null;
+  const {
+    position
+  } = context;
+
+  function generateStyles(p) {
+    switch (p) {
+      case "BOTTOM_LEFT":
+        return {
+          marginTop: "20px"
+        };
+
+      case "TOP":
+      default:
+        return {
+          marginBottom: "20px"
+        };
+    }
   }
-}, children, React.createElement(Close, {
-  onClick: () => dismiss(),
-  style: {
-    position: "absolute",
-    top: "13px",
-    right: "7px",
-    opacity: "0.4"
-  }
-}));
+
+  return React.createElement("div", {
+    id: `hydra-alert-${id}`,
+    style: {
+      position: "relative",
+      boxShadow: `0px 0px 4px 4px ${COLOR.GRAY[300]}`,
+      backgroundColor: `${COLOR.GRAY[100]}`,
+      width: "350px",
+      padding: "20px",
+      paddingRight: "38px",
+      ...generateStyles(position),
+      ...style
+    }
+  }, children, React.createElement(Close, {
+    onClick: () => dismiss(),
+    style: {
+      position: "absolute",
+      top: "13px",
+      right: "7px",
+      opacity: "0.4"
+    }
+  }));
+});
 
 const randomString = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 
@@ -109,7 +168,7 @@ const reducer = (state, action) => {
 const AlertProvider = ({
   children,
   duration: _duration = 10000,
-  position
+  position: _position = "TOP"
 }) => {
   const [state, dispatch] = React.useReducer(reducer, {});
 
@@ -153,14 +212,15 @@ const AlertProvider = ({
   return React.createElement(P, {
     value: {
       isActive: false,
-      activate
+      activate,
+      position: _position
     }
   }, React.createElement("div", null, children), React.createElement("div", {
     id: "hydra-alert-drawer",
     style: {
       position: "fixed",
       margin: "20px",
-      ...generateStyles(position)
+      ...generateStyles(_position)
     }
   }, Object.keys(state).map(alertKey => {
     const {
@@ -182,42 +242,6 @@ const AlertProvider = ({
 const Alerts = {
   Consumer: C,
   Provider: AlertProvider
-};
-
-const COLOR = {
-  GRAY: {
-    100: "#ffffff",
-    200: "#f1f2f6",
-    300: "#dfe4ea",
-    400: "#ced6e0",
-    500: "#a4b0be",
-    600: "#747d8c",
-    700: "#57606f",
-    800: "#2f3542"
-  },
-  hexToRgb: hex => {
-    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-    hex = hex.replace(shorthandRegex, function (m, r, g, b) {
-      return r + r + g + g + b + b;
-    });
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16)
-    } : null;
-  },
-  asRGB: (color, id) => {
-    const hex = COLOR[color][id];
-    const result = COLOR.hexToRgb(hex);
-    if (!result) throw new Error("reference error, bad COLOR");
-    const {
-      r,
-      g,
-      b
-    } = result;
-    return `${r}, ${g}, ${b}`;
-  }
 };
 
 const NoBackground = ({
@@ -339,6 +363,21 @@ const Overlay = {
   Provider: OverlayProvider
 };
 
+let _ = t => t,
+    _t2;
+const slideLeft = translateX => keyframes(_t2 || (_t2 = _`
+  to { 
+    transform: translateX(${0}px);
+  }
+`), translateX);
+
+let _$1 = t => t,
+    _t;
+const TextOverflow = styled.div(_t || (_t = _$1`
+  overflow: auto;
+  word-break: break-word;
+`));
+
 const Header = ({
   id,
   headerText,
@@ -349,6 +388,7 @@ const Header = ({
   style: {
     minHeight: "32px",
     position: "relative",
+    paddingBottom: "24px",
     ...style
   }
 }, headerText && React.createElement("h3", {
@@ -369,16 +409,22 @@ const Body = ({
   children,
   id,
   style
-}) => React.createElement("div", {
+}) => React.createElement(TextOverflow, {
   id: id,
   style: {
     flex: 1,
-    paddingTop: "16px",
-    paddingBottom: "24px",
     ...style
   }
 }, children);
-const Footer = props => React.createElement(ButtonRow, Object.assign({}, props));
+const Footer = ({
+  style,
+  ...rest
+}) => React.createElement(ButtonRow, Object.assign({}, rest, {
+  style: {
+    paddingTop: "24px",
+    ...style
+  }
+}));
 
 const ModalHeader = ({
   closeModal,
@@ -387,9 +433,6 @@ const ModalHeader = ({
   id: "hydra-modal-header",
   onClick: () => closeModal()
 }, rest));
-const ModalBody = props => React.createElement(Body, Object.assign({
-  id: "hydra-modal-body"
-}, props));
 const ModalFooter = ({
   closeModal,
   style
@@ -400,6 +443,9 @@ const ModalFooter = ({
 }, React.createElement(Button, {
   onClick: () => closeModal()
 }, "close"));
+const ModalBody = props => React.createElement(Body, Object.assign({
+  id: "hydra-modal-body"
+}, props));
 const ModalContainer = ({
   children,
   deactivate,
@@ -417,9 +463,9 @@ const ModalContainer = ({
   style: {
     width: `${_width}px`,
     height: `${_height}px`,
-    backgroundColor: "#fff",
     borderRadius: "2px",
     boxShadow: `0px 0px 8px 4px ${COLOR.GRAY[300]}`,
+    backgroundColor: "#fff",
     position: "absolute",
     left: "50%",
     marginLeft: `-${Math.floor(_width / 2)}px`,
@@ -448,16 +494,8 @@ const Modal = props => React.createElement(Overlay.Consumer, null, context => {
   return React.createElement(Container, Object.assign({}, props, context));
 });
 
-let _ = t => t,
-    _t2;
-const slideLeft = translateX => keyframes(_t2 || (_t2 = _`
-  to { 
-    transform: translateX(${0}px);
-  }
-`), translateX);
-
-let _$1 = t => t,
-    _t,
+let _$2 = t => t,
+    _t$1,
     _t2$1,
     _t3;
 const PanelHeader = ({
@@ -481,24 +519,23 @@ const PanelBody = props => React.createElement(Body, Object.assign({
   id: "hydra-panel-body"
 }, props));
 
-const slideInMixin = () => css(_t || (_t = _$1`
+const slideInMixin = () => css(_t$1 || (_t$1 = _$2`
   right: -600px;
   animation: ${0} 250ms ease-out forwards;
 `), slideLeft(-600));
 
-const slideOutMixin = () => css(_t2$1 || (_t2$1 = _$1`
+const slideOutMixin = () => css(_t2$1 || (_t2$1 = _$2`
   right: 0px;
   animation: ${0} 250ms ease-out forwards;
 `), slideLeft(600));
 
-const PanelWrapper = styled.div(_t3 || (_t3 = _$1`
+const PanelWrapper = styled.div(_t3 || (_t3 = _$2`
   ${0}
 `), props => props.isOpen ? slideInMixin : slideOutMixin);
 const PanelContainer = ({
   children,
   styleOverrides,
   width: _width = "600px",
-  height: _height = "100%",
   withHeader: _withHeader = true,
   headerText,
   Header: _Header = PanelHeader,
@@ -513,16 +550,15 @@ const PanelContainer = ({
     isOpen: isOpen,
     style: {
       width: _width,
-      height: _height,
+      height: "100%",
       position: "fixed",
       top: "0px",
-      backgroundColor: "#fff",
+      backgroundColor: `${COLOR.GRAY[100]}`,
       display: "flex",
       flexDirection: "column",
       boxSizing: "border-box",
       padding: "14px 16px 24px 16px",
-      overflow: "auto",
-      wordBreak: "break-word",
+      boxShadow: `0px 0px 8px 4px ${COLOR.GRAY[300]}`,
       ...(styleOverrides === null || styleOverrides === void 0 ? void 0 : styleOverrides.container)
     }
   }, _withHeader && React.createElement(_Header, {

@@ -1,5 +1,6 @@
 import React from "react";
 import { Close, ButtonRow, ButtonRowProps } from "../Button";
+import { TextOverflow } from "../Styles";
 
 type SharedComponentProps = {
   id: string;
@@ -10,6 +11,7 @@ type SharedHeaderProps = {
   onClick: () => void;
 } & SharedComponentProps &
   StyleOverride;
+
 export const Header: React.FC<SharedHeaderProps> = ({
   id,
   headerText,
@@ -21,6 +23,7 @@ export const Header: React.FC<SharedHeaderProps> = ({
     style={{
       minHeight: "32px",
       position: "relative",
+      paddingBottom: "24px",
       ...style,
     }}
   >
@@ -44,20 +47,18 @@ export const Header: React.FC<SharedHeaderProps> = ({
 
 type SharedBodyProps = SharedComponentProps & StyleOverride;
 export const Body: React.FC<SharedBodyProps> = ({ children, id, style }) => (
-  <div
+  <TextOverflow
     id={id}
     style={{
       flex: 1,
-      paddingTop: "16px",
-      paddingBottom: "24px",
       ...style,
     }}
   >
     {children}
-  </div>
+  </TextOverflow>
 );
 
 type SharedFooterProps = ButtonRowProps;
-export const Footer: React.FC<SharedFooterProps> = (props) => (
-  <ButtonRow {...props} />
+export const Footer: React.FC<SharedFooterProps> = ({ style, ...rest }) => (
+  <ButtonRow {...rest} style={{ paddingTop: "24px", ...style }} />
 );

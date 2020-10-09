@@ -1,5 +1,6 @@
 import React from "react";
 import { CSSProperties } from "styled-components";
+import { COLOR } from "../Theme";
 import { Close } from "../Button";
 
 type AlertProps = {
@@ -12,29 +13,53 @@ export const Alert: React.FC<AlertProps> = ({
   dismiss,
   style,
 }) => (
-  <div
-    id={`hydra-alert-${id}`}
-    style={{
-      position: "relative",
-      boxShadow: "rgba(0, 0, 0, 0.23) 0px 1px 6px 2px",
-      width: "350px",
-      padding: "20px",
-      paddingRight: "38px",
-      marginBottom: "20px",
-      ...style,
+  <C>
+    {(context) => {
+      if (!context) return null;
+      const { position } = context;
+
+      function generateStyles(p: AlertPosition): CSSProperties {
+        switch (p) {
+          case "BOTTOM_LEFT":
+            return {
+              marginTop: "20px",
+            };
+          case "TOP":
+          default:
+            return {
+              marginBottom: "20px",
+            };
+        }
+      }
+
+      return (
+        <div
+          id={`hydra-alert-${id}`}
+          style={{
+            position: "relative",
+            boxShadow: `0px 0px 4px 4px ${COLOR.GRAY[300]}`,
+            backgroundColor: `${COLOR.GRAY[100]}`,
+            width: "350px",
+            padding: "20px",
+            paddingRight: "38px",
+            ...generateStyles(position),
+            ...style,
+          }}
+        >
+          {children}
+          <Close
+            onClick={() => dismiss()}
+            style={{
+              position: "absolute",
+              top: "13px",
+              right: "7px",
+              opacity: "0.4",
+            }}
+          />
+        </div>
+      );
     }}
-  >
-    {children}
-    <Close
-      onClick={() => dismiss()}
-      style={{
-        position: "absolute",
-        top: "13px",
-        right: "7px",
-        opacity: "0.4",
-      }}
-    />
-  </div>
+  </C>
 );
 
 //http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
@@ -52,6 +77,7 @@ export type AlertContext = {
   isActive: boolean;
   /** renders the alert to be shown, given provided opts */
   activate: (o: ActivateOptions) => void;
+  position: AlertPosition;
 };
 
 const { Consumer: C, Provider: P } = React.createContext<AlertContext | null>(
@@ -94,7 +120,7 @@ type AlertProviderProps = {
 const AlertProvider: React.FC<AlertProviderProps> = ({
   children,
   duration = 10000,
-  position,
+  position = "TOP",
 }) => {
   const [state, dispatch] = React.useReducer(reducer, {});
 
@@ -134,6 +160,7 @@ const AlertProvider: React.FC<AlertProviderProps> = ({
       value={{
         isActive: false,
         activate,
+        position,
       }}
     >
       <div>{children}</div>

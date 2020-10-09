@@ -21,7 +21,7 @@ export const ButtonRow: FC<ButtonRowProps> = ({
 type CloseProps = {
   onClick: () => void;
 } & ReactButton;
-/** This is a super-specific close button that's got terrible CSS but look ma, no SVG's! */
+/** This is a super-specific close button that's got terrible CSS but look, no SVG's! */
 export const Close: React.FC<CloseProps> = (props) => (
   <Button
     {...props}

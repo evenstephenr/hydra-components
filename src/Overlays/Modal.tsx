@@ -18,10 +18,6 @@ export const ModalHeader: FC<ModalHeaderProps> = ({ closeModal, ...rest }) => (
   <Header id="hydra-modal-header" onClick={() => closeModal()} {...rest} />
 );
 
-export const ModalBody: FC<StyleOverride> = (props) => (
-  <Body id="hydra-modal-body" {...props} />
-);
-
 type ModalFooterProps = {
   closeModal: () => void;
 } & StyleOverride;
@@ -29,6 +25,10 @@ export const ModalFooter: FC<ModalFooterProps> = ({ closeModal, style }) => (
   <Footer id="hydra-modal-footer" position="right" style={style}>
     <Button onClick={() => closeModal()}>close</Button>
   </Footer>
+);
+
+export const ModalBody: FC<StyleOverride> = (props) => (
+  <Body id="hydra-modal-body" {...props} />
 );
 
 type ModalContainerProps = {
@@ -69,9 +69,9 @@ export const ModalContainer: FC<ModalProps> = ({
     style={{
       width: `${width}px`,
       height: `${height}px`,
-      backgroundColor: "#fff",
       borderRadius: "2px",
       boxShadow: `0px 0px 8px 4px ${COLOR.GRAY[300]}`,
+      backgroundColor: "#fff",
       position: "absolute",
       left: "50%",
       marginLeft: `-${Math.floor(width / 2)}px`,

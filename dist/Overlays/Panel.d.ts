@@ -15,7 +15,6 @@ declare type PanelProps = {
     Header?: FC<PanelHeaderProps>;
     headerText?: string;
     width?: string;
-    height?: string;
     withHeader?: boolean;
     Body?: FC;
     Footer?: FC<PanelFooterProps>;

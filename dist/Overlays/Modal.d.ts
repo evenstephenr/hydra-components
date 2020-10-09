@@ -11,11 +11,11 @@ declare type ModalHeaderProps = {
     closeModal: () => void;
 } & StyleOverride;
 export declare const ModalHeader: FC<ModalHeaderProps>;
-export declare const ModalBody: FC<StyleOverride>;
 declare type ModalFooterProps = {
     closeModal: () => void;
 } & StyleOverride;
 export declare const ModalFooter: FC<ModalFooterProps>;
+export declare const ModalBody: FC<StyleOverride>;
 declare type ModalContainerProps = {
     Container?: FC<ModalContainerProps>;
     Header?: FC<ModalHeaderProps>;
