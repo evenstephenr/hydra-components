@@ -446,7 +446,7 @@ const ModalFooter = ({
 const ModalBody = props => React.createElement(Body, Object.assign({
   id: "hydra-modal-body"
 }, props));
-const ModalContainer = ({
+const ModalContainer = React.forwardRef(({
   children,
   deactivate,
   headerText,
@@ -458,8 +458,9 @@ const ModalContainer = ({
   Body: _Body = ModalBody,
   withFooter: _withFooter = true,
   Footer: _Footer = ModalFooter
-}) => React.createElement("div", {
+}, containerRef) => React.createElement("div", {
   id: "hydra-overlay-modal",
+  ref: containerRef,
   style: {
     width: `${_width}px`,
     height: `${_height}px`,
@@ -485,7 +486,7 @@ const ModalContainer = ({
 }, children), _withFooter && React.createElement(_Footer, {
   closeModal: deactivate,
   style: styleOverrides === null || styleOverrides === void 0 ? void 0 : styleOverrides.footer
-}));
+})));
 const Modal = props => React.createElement(Overlay.Consumer, null, context => {
   if (!context) return null;
   const {
@@ -584,5 +585,33 @@ const Panel = props => React.createElement(Overlay.Consumer, null, context => {
   return React.createElement(Container, Object.assign({}, rest, context));
 });
 
-export { Alert, Alerts, Background, BlurryBackground, Button, ButtonRow, Close, DarkBackground, Modal, ModalBody, ModalContainer, ModalFooter, ModalHeader, NoBackground, Overlay, Panel, PanelBody, PanelContainer, PanelFooter, PanelHeader };
+const useKeydown = events => {
+  useEffect(() => {
+    function handleKeydown(e) {
+      if (e.key in events) {
+        events[e.key](e);
+      }
+    }
+
+    window.addEventListener('keydown', handleKeydown);
+    return () => {
+      window.removeEventListener('keydown', handleKeydown);
+    };
+  }, []);
+};
+
+const useClick = handler => {
+  useEffect(() => {
+    function handleClick(e) {
+      handler(e);
+    }
+
+    window.addEventListener('click', handleClick);
+    return () => {
+      window.removeEventListener('click', handleClick);
+    };
+  }, []);
+};
+
+export { Alert, Alerts, Background, BlurryBackground, Button, ButtonRow, Close, DarkBackground, Modal, ModalBody, ModalContainer, ModalFooter, ModalHeader, NoBackground, Overlay, Panel, PanelBody, PanelContainer, PanelFooter, PanelHeader, useClick, useKeydown };
 //# sourceMappingURL=index.modern.js.map

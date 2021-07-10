@@ -1,5 +1,5 @@
-import React from "react";
-import { Overlay, Modal, Panel, Alerts } from "components";
+import React, { createRef } from "react";
+import { Overlay, Modal, Panel, Alerts, useKeydown, useClick, ModalContainer } from "components";
 import "./App.css";
 
 const SampleCustom = () => {
@@ -29,6 +29,9 @@ const Activator = () => (
             </button>
             <button onClick={() => context.activate({ component: "PANEL" })}>
               activate Panel
+            </button>
+            <button onClick={() => context.activate({ component: "EVENTS_MODAL" })}>
+              activate Modal with events
             </button>
           </div>
           <div>
@@ -78,26 +81,19 @@ const Default = () => (
   </Overlay.Consumer>
 );
 
-/** Hooking into Overlay.Consumer directly to build a custom Component for a Modal */
+/** Building a custom Component for a Modal */
 const ModalFooter = ({ style, closeModal }) => (
-  <Overlay.Consumer>
-    {(context) => {
-      if (!context) return null;
-      return (
-        <div style={style}>
-          <button
-            onClick={() => {
-              alert("submit!");
-              context.deactivate();
-            }}
-          >
-            Submit
-          </button>
-          <button onClick={() => closeModal()}>Close</button>
-        </div>
-      );
-    }}
-  </Overlay.Consumer>
+  <div style={style}>
+    <button
+      onClick={() => {
+        alert("submit!");
+        closeModal();
+      }}
+    >
+      Submit
+    </button>
+    <button onClick={() => closeModal()}>Close</button>
+  </div>
 );
 
 /** Using a stock Modal */
@@ -107,16 +103,43 @@ const Message = () => (
   </Modal>
 );
 
+/** stock Panel */
 const Flyout = () => (
   <Panel headerText="This is a Panel!">
     <div>hello hi hey</div>
   </Panel>
 );
 
+/** Custom ModalContainer that adds Event middleware */
+const EventModal = context => {
+  const ref = createRef();
+
+  useKeydown({
+    'Escape': () => context.deactivate(),
+  });
+
+  useClick((e) => {
+    if (!(ref?.current?.contains(e.target))) {
+      context.deactivate();
+    }
+  });
+
+  return (
+    <ModalContainer
+      ref={ref}
+      headerText="This is a Modal that listens to events"
+      {...context}
+    >
+      <div>hello hi hey</div>
+    </ModalContainer>
+  );
+};
+
 const componentMap = {
   DEFAULT: Default,
   MODAL: Message,
   PANEL: Flyout,
+  EVENTS_MODAL: () => <Modal Container={EventModal} />,
 };
 
 export const App = () => (

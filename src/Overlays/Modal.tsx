@@ -18,6 +18,7 @@ export const ModalHeader: FC<ModalHeaderProps> = ({ closeModal, ...rest }) => (
   <Header id="hydra-modal-header" onClick={() => closeModal()} {...rest} />
 );
 
+// TODO: should the children of Modal all receive the same context?
 type ModalFooterProps = {
   closeModal: () => void;
 } & StyleOverride;
@@ -51,7 +52,7 @@ type ModalContainerProps = {
 
 type ModalProps = ModalContainerProps & OverlayContext;
 
-export const ModalContainer: FC<ModalProps> = ({
+export const ModalContainer = React.forwardRef<HTMLDivElement, ModalProps>(({
   children,
   deactivate,
   headerText,
@@ -63,9 +64,10 @@ export const ModalContainer: FC<ModalProps> = ({
   Body = ModalBody,
   withFooter = true,
   Footer = ModalFooter,
-}) => (
+}, containerRef) => (
   <div
     id="hydra-overlay-modal"
+    ref={containerRef}
     style={{
       width: `${width}px`,
       height: `${height}px`,
@@ -95,7 +97,7 @@ export const ModalContainer: FC<ModalProps> = ({
       <Footer closeModal={deactivate} style={styleOverrides?.footer} />
     )}
   </div>
-);
+));
 
 export const Modal = (props: ModalContainerProps) => (
   <Overlay.Consumer>

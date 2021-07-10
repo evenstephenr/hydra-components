@@ -1,5 +1,4 @@
 import React, { FC } from "react";
-import { OverlayContext } from "./Overlay";
 /**
  * TODO:
  *
@@ -33,7 +32,35 @@ declare type ModalContainerProps = {
         footer?: React.CSSProperties;
     };
 } & ModalHeaderProps;
-declare type ModalProps = ModalContainerProps & OverlayContext;
-export declare const ModalContainer: FC<ModalProps>;
+export declare const ModalContainer: React.ForwardRefExoticComponent<{
+    Container?: React.FC<ModalContainerProps> | undefined;
+    Header?: React.FC<ModalHeaderProps> | undefined;
+    headerText?: string | undefined;
+    width?: number | undefined;
+    height?: number | undefined;
+    withHeader?: boolean | undefined;
+    Body?: React.FC<{}> | undefined;
+    Footer?: React.FC<ModalFooterProps> | undefined;
+    withFooter?: boolean | undefined;
+    styleOverrides?: {
+        container?: React.CSSProperties | undefined;
+        header?: React.CSSProperties | undefined;
+        body?: React.CSSProperties | undefined;
+        footer?: React.CSSProperties | undefined;
+    } | undefined;
+} & {
+    headerText?: string | undefined;
+    closeModal: () => void;
+} & StyleOverride & {
+    isActive: boolean;
+    activate: CB<{
+        component: string;
+    }, void>;
+    deactivate: Noop<void>;
+} & {
+    componentMap: {
+        [k: string]: React.ReactNode;
+    };
+} & import("./Backgrounds").BackgroundProps & React.RefAttributes<HTMLDivElement>>;
 export declare const Modal: (props: ModalContainerProps) => JSX.Element;
 export {};

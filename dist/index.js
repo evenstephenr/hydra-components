@@ -523,7 +523,7 @@ var ModalBody = function ModalBody(props) {
     id: "hydra-modal-body"
   }, props));
 };
-var ModalContainer = function ModalContainer(_ref3) {
+var ModalContainer = React__default.forwardRef(function (_ref3, containerRef) {
   var children = _ref3.children,
       deactivate = _ref3.deactivate,
       headerText = _ref3.headerText,
@@ -544,6 +544,7 @@ var ModalContainer = function ModalContainer(_ref3) {
       Footer = _ref3$Footer === void 0 ? ModalFooter : _ref3$Footer;
   return React__default.createElement("div", {
     id: "hydra-overlay-modal",
+    ref: containerRef,
     style: _extends({
       width: width + "px",
       height: height + "px",
@@ -569,7 +570,7 @@ var ModalContainer = function ModalContainer(_ref3) {
     closeModal: deactivate,
     style: styleOverrides === null || styleOverrides === void 0 ? void 0 : styleOverrides.footer
   }));
-};
+});
 var Modal = function Modal(props) {
   return React__default.createElement(Overlay.Consumer, null, function (context) {
     if (!context) return null;
@@ -716,6 +717,34 @@ var Panel = function Panel(props) {
   });
 };
 
+var useKeydown = function useKeydown(events) {
+  React.useEffect(function () {
+    function handleKeydown(e) {
+      if (e.key in events) {
+        events[e.key](e);
+      }
+    }
+
+    window.addEventListener('keydown', handleKeydown);
+    return function () {
+      window.removeEventListener('keydown', handleKeydown);
+    };
+  }, []);
+};
+
+var useClick = function useClick(handler) {
+  React.useEffect(function () {
+    function handleClick(e) {
+      handler(e);
+    }
+
+    window.addEventListener('click', handleClick);
+    return function () {
+      window.removeEventListener('click', handleClick);
+    };
+  }, []);
+};
+
 exports.Alert = Alert;
 exports.Alerts = Alerts;
 exports.Background = Background;
@@ -736,4 +765,6 @@ exports.PanelBody = PanelBody;
 exports.PanelContainer = PanelContainer;
 exports.PanelFooter = PanelFooter;
 exports.PanelHeader = PanelHeader;
+exports.useClick = useClick;
+exports.useKeydown = useKeydown;
 //# sourceMappingURL=index.js.map

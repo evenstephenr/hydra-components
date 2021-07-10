@@ -1,16 +1,17 @@
-/**
- * This module should accept a ref or query string to attach callbacks to keydown events,
- *  also providing a mechanism to de-register some or all of the events
- *
- * WIP implementation concepts...
- *
- * custom hook?
- * = useClick(...) ???
- *
- * regular function?
- * - registerClicks(ref, {
- *  'Enter': () => console.log('enter key pressed'),
- *   43: () => console.log('lol what is this key')
- * })
- */
-export const useKeydown = () => console.log("TODO");
+import { useEffect } from "react";
+
+// TODO: add optional ref argument to attach this to a local element, rather than the entire window
+// TODO: add optional 'sequence' arguement to listen to multiple inputs and then call a handler
+export const useKeydown = (events: { [key: string]: (e: KeyboardEvent) => void}) => {
+  useEffect(() => {
+    function handleKeydown(e: KeyboardEvent) {
+      if (e.key in events) {
+        events[e.key](e);
+      }
+    }
+    window.addEventListener('keydown', handleKeydown);
+    return () => {
+      window.removeEventListener('keydown', handleKeydown)
+    }
+  }, []);
+}
